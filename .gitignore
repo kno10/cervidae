@@ -1,1 +1,9 @@
 target/
+algorithms/target/
+codegenerator/target/
+*~
+*.swp
+.project
+.settings
+.externalToolBuilders
+.classpath
