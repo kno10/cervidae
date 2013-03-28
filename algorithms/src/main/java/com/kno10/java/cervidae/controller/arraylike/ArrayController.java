@@ -1,4 +1,4 @@
-package com.kno10.java.cervidae.arrays;
+package com.kno10.java.cervidae.controller.arraylike;
 
 /**
  * Adapter class to control array-like data structures.

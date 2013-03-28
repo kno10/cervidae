@@ -1,6 +1,8 @@
-package com.kno10.java.cervidae.algorithms;
+package com.kno10.java.cervidae.algorithms.sort;
 
-import com.kno10.java.cervidae.arrays.ArrayController;
+import com.kno10.java.cervidae.controller.arraylike.ArrayController;
+import com.kno10.java.cervidae.sort.InsertionSort;
+import com.kno10.java.cervidae.sort.SortingNetworks;
 
 /**
  * QuickSelect computes ("selects") the element at a given rank and can be used
@@ -39,7 +41,7 @@ public class QuickSelectBo5 {
       // Optimization for small arrays
       // This also ensures a minimum size below
       if (start + INSERTION_THRESHOLD > end) {
-        DualPivotQuickSortBo5.insertionSort(control, data, start, end);
+        InsertionSort.insertionSort(control, data, start, end);
         return;
       }
 
@@ -53,7 +55,7 @@ public class QuickSelectBo5 {
       final int m4 = m3 + seventh;
       final int m5 = m4 + seventh;
 
-      DualPivotQuickSortBo5.optimalSort5Elements(control, data, m1, m2, m3, m4, m5);
+      SortingNetworks.sort5(control, data, m1, m2, m3, m4, m5);
 
       int best = bestPivot(rank, m1, m2, m3, m4, m5);
       // Move middle element (pivot) out of the way.

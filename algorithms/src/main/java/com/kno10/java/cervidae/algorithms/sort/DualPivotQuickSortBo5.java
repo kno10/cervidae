@@ -1,6 +1,8 @@
-package com.kno10.java.cervidae.algorithms;
+package com.kno10.java.cervidae.algorithms.sort;
 
-import com.kno10.java.cervidae.arrays.ArrayController;
+import com.kno10.java.cervidae.controller.arraylike.ArrayController;
+import com.kno10.java.cervidae.sort.InsertionSort;
+import com.kno10.java.cervidae.sort.SortingNetworks;
 
 /**
  * A modified QuickSort to partially sort an array.
@@ -60,7 +62,7 @@ public class DualPivotQuickSortBo5 {
   private static <T> void quickSort(ArrayController<T> control, T data, final int start, final int end) {
     final int len = end - start;
     if (len < INSERTION_THRESHOLD) {
-      insertionSort(control, data, start, end);
+      InsertionSort.insertionSort(control, data, start, end);
       return;
     }
 
@@ -74,7 +76,7 @@ public class DualPivotQuickSortBo5 {
 
     // Explicit (and optimal) sorting network for 5 elements
     // See Knuth for details.
-    optimalSort5Elements(control, data, m1, m2, m3, m4, m5);
+    SortingNetworks.sort5(control, data, m1, m2, m3, m4, m5);
 
     // Choose the 2 and 4th as pivots, as we want to get three parts
     control.swap(data, m2, start);
@@ -130,64 +132,5 @@ public class DualPivotQuickSortBo5 {
       quickSort(control, data, left, right);
     }
     quickSort(control, data, right + 2, end);
-  }
-
-  /**
-   * Explicit (and optimal) sorting network for 5 elements.
-   * 
-   * See Knuth for details.
-   * 
-   * @param control Controller
-   * @param data Data array
-   * @param m1 Position of first
-   * @param m2 Position of second
-   * @param m3 Position of third
-   * @param m4 Position of fifth
-   * @param m5 Position of fourth
-   */
-  public static <T> void optimalSort5Elements(ArrayController<T> control, T data, final int m1, final int m2, final int m3, final int m4, final int m5) {
-    if (control.greaterThan(data, m1, m2)) {
-      control.swap(data, m1, m2);
-    }
-    if (control.greaterThan(data, m1, m3)) {
-      control.swap(data, m1, m3);
-    }
-    if (control.greaterThan(data, m2, m3)) {
-      control.swap(data, m2, m3);
-    }
-    if (control.greaterThan(data, m4, m5)) {
-      control.swap(data, m4, m5);
-    }
-    if (control.greaterThan(data, m1, m4)) {
-      control.swap(data, m1, m4);
-    }
-    if (control.greaterThan(data, m3, m4)) {
-      control.swap(data, m3, m4);
-    }
-    if (control.greaterThan(data, m2, m5)) {
-      control.swap(data, m2, m5);
-    }
-    if (control.greaterThan(data, m2, m3)) {
-      control.swap(data, m2, m3);
-    }
-    if (control.greaterThan(data, m4, m5)) {
-      control.swap(data, m4, m5);
-    }
-  }
-
-  /**
-   * Sort a small array part using repetitive insertion sort.
-   * 
-   * @param control Array controller
-   * @param data Data to sort
-   * @param start Interval start
-   * @param end Interval end
-   */
-  public static <T> void insertionSort(ArrayController<T> control, T data, int start, int end) {
-    for (int i = start + 1; i < end; i++) {
-      for (int j = i; j > start && control.greaterThan(data, j - 1, j); j--) {
-        control.swap(data, j, j - 1);
-      }
-    }
   }
 }

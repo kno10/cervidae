@@ -1,4 +1,4 @@
-package com.kno10.java.cervidae.arrays;
+package com.kno10.java.cervidae.controller.arraylike;
 
 /**
  * Class to control an {@code #primitive#[]} array.

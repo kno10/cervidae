@@ -1,4 +1,4 @@
-package com.kno10.java.cervidae.arrays;
+package com.kno10.java.cervidae.controller.arraylike;
 
 public class ComparableArrayController<T extends Comparable<? super T>> implements ArrayController<T[]> {
   @Override

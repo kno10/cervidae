@@ -1,7 +1,7 @@
 package com.kno10.java.cervidae;
 
-import com.kno10.java.cervidae.algorithms.QuickSelectBo5;
-import com.kno10.java.cervidae.arrays.DoubleArrayController;
+import com.kno10.java.cervidae.algorithms.sort.QuickSelectBo5;
+import com.kno10.java.cervidae.controller.arraylike.DoubleArrayController;
 
 /**
  * Utility class for double arrays.
