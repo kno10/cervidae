@@ -46,7 +46,7 @@ public class DualPivotQuickSortBo5 {
    * @param comp Comparator
    */
   public static <T> void sort(ArrayController<T> control, T data, int start, int end) {
-    quickSort(control, data, start, end - 1);
+    quickSort(control, data, start, end);
   }
 
   /**
@@ -54,7 +54,7 @@ public class DualPivotQuickSortBo5 {
    * 
    * @param data Data to sort
    * @param start First index
-   * @param end Last index (inclusive!)
+   * @param end Last index (exclusive!)
    * @param comp Comparator
    */
   private static <T> void quickSort(ArrayController<T> control, T data, final int start, final int end) {

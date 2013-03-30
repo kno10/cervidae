@@ -23,7 +23,7 @@ public class QuickSelectBo5 {
   private static final int INSERTION_THRESHOLD = 17;
 
   /**
-   * QuickSelect is essentially quicksort, except that we only "sort" that half
+   * QuickSelect is essentially QuickSort, except that we only "sort" that half
    * of the array that we are interested in.
    * 
    * Note: <b>the array is partially sorted by this!</b>
@@ -35,10 +35,10 @@ public class QuickSelectBo5 {
    * @param rank rank position we are interested in (starting at 0)
    */
   public static <T> void quickSelect(ArrayController<T> control, T data, int start, int end, int rank) {
-    while (true) {
+    while(true) {
       // Optimization for small arrays
       // This also ensures a minimum size below
-      if (start + INSERTION_THRESHOLD > end) {
+      if(start + INSERTION_THRESHOLD > end) {
         InsertionSort.insertionSort(control, data, start, end);
         return;
       }
@@ -55,38 +55,39 @@ public class QuickSelectBo5 {
 
       SortingNetworks.sort5(control, data, m1, m2, m3, m4, m5);
 
-      int best = bestPivot(rank, m1, m2, m3, m4, m5);
+      final int best = bestPivot(rank, m1, m2, m3, m4, m5);
+      final int last = end - 1;
       // Move middle element (pivot) out of the way.
-      control.swap(data, best, end - 1);
+      control.swap(data, best, last);
 
       // Begin partitioning
       int i = start, j = end - 2;
       // This is classic quicksort stuff
-      while (true) {
-        while (i <= j && control.greaterThan(data, end - 1, i)) {
+      while(true) {
+        while(i <= j && control.greaterThan(data, last, i)) {
           i++;
         }
-        while (j >= i && !control.greaterThan(data, end - 1, j)) {
+        while(j >= i && !control.greaterThan(data, last, j)) {
           j--;
         }
-        if (i >= j) {
+        if(i >= j) {
           break;
         }
         control.swap(data, i, j);
       }
 
-      // Move pivot (former middle element) back into the appropriate
-      // place
-      control.swap(data, i, end - 1);
+      // Move pivot back into the appropriate place
+      control.swap(data, i, last);
 
-      // In contrast to quicksort, we only need to recurse into the half
-      // we are
-      // interested in. Instead of recursion we now use iteration.
-      if (rank < i) {
+      // In contrast to QuickSort, we only need to recurse into the half
+      // we are interested in. Instead of recursion we now use iteration.
+      if(rank < i) {
         end = i;
-      } else if (rank > i) {
+      }
+      else if(rank > i) {
         start = i + 1;
-      } else {
+      }
+      else {
         break;
       }
     } // Loop until rank==i
@@ -104,19 +105,18 @@ public class QuickSelectBo5 {
    * @return Best pivot candidate
    */
   private static final int bestPivot(int rank, int m1, int m2, int m3, int m4, int m5) {
-    if (rank < m1) {
+    if(rank < m1) {
       return m1;
     }
-    if (rank > m5) {
+    if(rank > m5) {
       return m5;
     }
-    if (rank < m2) {
+    if(rank < m2) {
       return m2;
     }
-    if (rank > m4) {
+    if(rank > m4) {
       return m4;
     }
     return m3;
   }
-
 }
