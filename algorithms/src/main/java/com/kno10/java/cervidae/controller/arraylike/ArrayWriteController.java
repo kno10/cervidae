@@ -7,23 +7,15 @@ package com.kno10.java.cervidae.controller.arraylike;
  * 
  * @param <T> Data structure type
  */
-public interface ArrayController<T, O> {
+public interface ArrayWriteController<T, O> extends ArrayReadController<T, O> {
   /**
-   * Get the object at the given position.
+   * Set the value at the given position.
    * 
    * @param data Data structure
    * @param pos Position
-   * @return Value at this position (as object)
+   * @param val Value
    */
-  O get(T data, int pos);
-
-  /**
-   * Get the length of the data structure.
-   * 
-   * @param data Data structure
-   * @return Length
-   */
-  int length(T data);
+  void set(T data, int pos, O val);
 
   /**
    * Swap the two elements at positions i and j.

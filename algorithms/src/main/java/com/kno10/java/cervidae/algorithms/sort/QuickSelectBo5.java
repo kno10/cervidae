@@ -1,6 +1,6 @@
 package com.kno10.java.cervidae.algorithms.sort;
 
-import com.kno10.java.cervidae.controller.arraylike.ArrayController;
+import com.kno10.java.cervidae.controller.arraylike.ArrayWriteController;
 
 /**
  * QuickSelect computes ("selects") the element at a given rank and can be used
@@ -34,7 +34,7 @@ public class QuickSelectBo5 {
    * @param end Interval end (exclusive)
    * @param rank rank position we are interested in (starting at 0)
    */
-  public static <T> void quickSelect(ArrayController<? super T, ?> control, T data, int start, int end, int rank) {
+  public static <T> void quickSelect(ArrayWriteController<? super T, ?> control, T data, int start, int end, int rank) {
     while(true) {
       // Optimization for small arrays
       // This also ensures a minimum size below

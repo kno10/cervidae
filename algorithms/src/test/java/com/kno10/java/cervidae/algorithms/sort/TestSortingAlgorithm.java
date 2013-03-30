@@ -42,7 +42,7 @@ public abstract class TestSortingAlgorithm {
     return ret;
   }
 
-  public void testSorted(double[] data) {
+  public static void testSorted(double[] data) {
     double current = data[0];
     for(int i = 1; i < data.length; i++) {
       assertTrue("Array not sorted at position " + i + " " + current + " !<= " + data[i], current <= data[i]);

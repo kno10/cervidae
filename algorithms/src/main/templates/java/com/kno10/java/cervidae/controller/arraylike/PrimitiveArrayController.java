@@ -6,7 +6,7 @@ package com.kno10.java.cervidae.controller.arraylike;
  * @author Erich Schubert
  */
 // #NOTE#
-public class #Primitive#ArrayController implements ArrayController<#primitive#[], #Primitive#> {
+public class #Primitive#ArrayController implements ArrayWriteController<#primitive#[], #Primitive#> {
 	/**
 	 * Adapter for #primitive# arrays.
 	 */
@@ -23,7 +23,12 @@ public class #Primitive#ArrayController implements ArrayController<#primitive#[]
 	
   @Override
   public #Primitive# get(#primitive#[] data, int pos) {
-    return #Primitive#.valueOf(data[pos]);
+    return data[pos];
+  }
+
+  @Override
+  public void set(#primitive#[] data, int pos, #Primitive# val) {
+    data[pos] = val;
   }
 
 	@Override

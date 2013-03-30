@@ -1,6 +1,6 @@
 package com.kno10.java.cervidae.algorithms.sort;
 
-import com.kno10.java.cervidae.controller.arraylike.ArrayController;
+import com.kno10.java.cervidae.controller.arraylike.ArrayWriteController;
 
 /**
  * A modified QuickSort to partially sort an array.
@@ -33,7 +33,7 @@ public class DualPivotQuickSortBo5 {
    * @param data Data to sort
    * @param comp Comparator
    */
-  public static <T> void sort(ArrayController<T, ?> control, T data) {
+  public static <T> void sort(ArrayWriteController<? super T, ?> control, T data) {
     sort(control, data, 0, control.length(data));
   }
 
@@ -45,7 +45,7 @@ public class DualPivotQuickSortBo5 {
    * @param end Last index (exclusive)
    * @param comp Comparator
    */
-  public static <T> void sort(ArrayController<? super T, ?> control, T data, int start, int end) {
+  public static <T> void sort(ArrayWriteController<? super T, ?> control, T data, int start, int end) {
     quickSort(control, data, start, end);
   }
 
@@ -57,7 +57,7 @@ public class DualPivotQuickSortBo5 {
    * @param end Last index (exclusive!)
    * @param comp Comparator
    */
-  private static <T> void quickSort(ArrayController<? super T, ?> control, T data, final int start, final int end) {
+  private static <T> void quickSort(ArrayWriteController<? super T, ?> control, T data, final int start, final int end) {
     final int len = end - start;
     final int last = end - 1;
     if(len < INSERTION_THRESHOLD) {

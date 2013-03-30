@@ -1,30 +1,47 @@
 package com.kno10.java.cervidae.controller.arraylike;
 
-public class ComparableArrayController<T extends Comparable<? super T>> implements ArrayController<T[], T> {
+/**
+ * Class to process an array of comparable objects.
+ * 
+ * @author Erich Schubert
+ * 
+ * @param <T> Actual data type
+ * @param <S> Array data type
+ */
+public class ComparableArrayController<T extends Comparable<? super T>, S> implements ArrayWriteController<S[], T> {
+  @SuppressWarnings("unchecked")
   @Override
-  public T get(T[] data, int pos) {
-    return data[pos];
+  public T get(S[] data, int pos) {
+    return (T) data[pos];
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public void set(S[] data, int pos, T val) {
+    data[pos] = (S) val;
   }
 
   @Override
-  public int length(T[] data) {
+  public int length(S[] data) {
     return data.length;
   }
 
   @Override
-  public void swap(T[] data, int i, int j) {
-    T tmp = data[i];
+  public void swap(S[] data, int i, int j) {
+    S tmp = data[i];
     data[i] = data[j];
     data[j] = tmp;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public boolean greaterThan(T[] data, int i, int j) {
-    return data[i].compareTo(data[j]) > 0;
+  public boolean greaterThan(S[] data, int i, int j) {
+    return ((T) data[i]).compareTo((T) data[j]) > 0;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public boolean equals(T[] data, int i, int j) {
-    return data[i].compareTo(data[j]) == 0;
+  public boolean equals(S[] data, int i, int j) {
+    return ((T) data[i]).compareTo((T) data[j]) == 0;
   }
 }

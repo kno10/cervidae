@@ -40,7 +40,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<sources>${basedir}/templates/</sources>
+					<sources>${basedir}/src/main/templates/</sources>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -55,7 +55,7 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>${project.build.directory}/generated-sources/main/java/</source>
+								<source>${project.build.directory}/generated-sources/java/</source>
 							</sources>
 						</configuration>
 					</execution>
