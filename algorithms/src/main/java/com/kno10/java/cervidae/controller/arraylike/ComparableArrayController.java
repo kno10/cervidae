@@ -1,6 +1,11 @@
 package com.kno10.java.cervidae.controller.arraylike;
 
-public class ComparableArrayController<T extends Comparable<? super T>> implements ArrayController<T[]> {
+public class ComparableArrayController<T extends Comparable<? super T>> implements ArrayController<T[], T> {
+  @Override
+  public T get(T[] data, int pos) {
+    return data[pos];
+  }
+
   @Override
   public int length(T[] data) {
     return data.length;

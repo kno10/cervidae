@@ -23,7 +23,7 @@ public class SortingNetworks {
    * @param m4 Position of fifth
    * @param m5 Position of fourth
    */
-  public static <T> void sort5(ArrayController<T> control, T data, final int m1, final int m2, final int m3, final int m4, final int m5) {
+  public static <T> void sort5(ArrayController<T, ?> control, T data, final int m1, final int m2, final int m3, final int m4, final int m5) {
     if (control.greaterThan(data, m1, m4)) {
       control.swap(data, m1, m4);
     }

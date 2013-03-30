@@ -7,7 +7,16 @@ package com.kno10.java.cervidae.controller.arraylike;
  * 
  * @param <T> Data structure type
  */
-public interface ArrayController<T> {
+public interface ArrayController<T, O> {
+  /**
+   * Get the object at the given position.
+   * 
+   * @param data Data structure
+   * @param pos Position
+   * @return Value at this position (as object)
+   */
+  O get(T data, int pos);
+
   /**
    * Get the length of the data structure.
    * 

@@ -18,7 +18,7 @@ public class QuickSortTextbook {
    * @param data Data to sort
    * @param comp Comparator
    */
-  public static <T> void sort(ArrayController<T> control, T data) {
+  public static <T> void sort(ArrayController<? super T, ?> control, T data) {
     sort(control, data, 0, control.length(data));
   }
 
@@ -30,7 +30,7 @@ public class QuickSortTextbook {
    * @param end Last index (exclusive)
    * @param comp Comparator
    */
-  public static <T> void sort(ArrayController<T> control, T data, int start, int end) {
+  public static <T> void sort(ArrayController<? super T, ?> control, T data, int start, int end) {
     quickSort(control, data, start, end);
   }
 
@@ -42,7 +42,7 @@ public class QuickSortTextbook {
    * @param end Last index (exclusive!)
    * @param comp Comparator
    */
-  private static <T> void quickSort(ArrayController<T> control, T data, final int start, final int end) {
+  private static <T> void quickSort(ArrayController<? super T, ?> control, T data, final int start, final int end) {
     final int last = end - 1;
 
     // We use the last element as pivot:

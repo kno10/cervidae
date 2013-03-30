@@ -12,7 +12,6 @@
     <substitute id="4">Short</substitute>
     <substitute id="5">Float</substitute>
     <substitute id="6">Byte</substitute>
-    <substitute id="7">Char</substitute>
   </group>
   <group link="1">
     <pattern>#primitive#</pattern>
@@ -22,7 +21,6 @@
     <substitute id="4">short</substitute>
     <substitute id="5">float</substitute>
     <substitute id="6">byte</substitute>
-    <substitute id="7">char</substitute>
   </group>
   <output>#Primitive#ArrayController.java</output>
 </template>

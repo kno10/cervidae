@@ -34,12 +34,12 @@ public class QuickSelectBo5 {
    * @param end Interval end (exclusive)
    * @param rank rank position we are interested in (starting at 0)
    */
-  public static <T> void quickSelect(ArrayController<T> control, T data, int start, int end, int rank) {
+  public static <T> void quickSelect(ArrayController<? super T, ?> control, T data, int start, int end, int rank) {
     while(true) {
       // Optimization for small arrays
       // This also ensures a minimum size below
       if(start + INSERTION_THRESHOLD > end) {
-        InsertionSort.insertionSort(control, data, start, end);
+        InsertionSort.sort(control, data, start, end);
         return;
       }
 
