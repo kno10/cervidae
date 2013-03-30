@@ -192,7 +192,6 @@ public class CervidaeGeneratorMojo extends AbstractMojo {
 				}
 				data = out.toString();
 			}
-			System.err.println(data);
 
 			process(output, data, outputdir, 0, new HashMap<String, String>());
 		}
@@ -236,7 +235,7 @@ public class CervidaeGeneratorMojo extends AbstractMojo {
 	}
 
 	/**
-	 * A simple substituion group.
+	 * A simple substitution group.
 	 * 
 	 * @author Erich Schubert
 	 */
