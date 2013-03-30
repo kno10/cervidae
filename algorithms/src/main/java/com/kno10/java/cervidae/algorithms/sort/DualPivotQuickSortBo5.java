@@ -1,8 +1,6 @@
 package com.kno10.java.cervidae.algorithms.sort;
 
 import com.kno10.java.cervidae.controller.arraylike.ArrayController;
-import com.kno10.java.cervidae.sort.InsertionSort;
-import com.kno10.java.cervidae.sort.SortingNetworks;
 
 /**
  * A modified QuickSort to partially sort an array.
