@@ -41,3 +41,17 @@ usually outperforms "optimal" sorting algorithms such as HeapSort. Dual-Pivot
 QuickSort was believed to be strictly more expensive than regular QuickSort. Yet,
 experiments have confirmed that it can offer benefits, and with OpenJDK 7, the
 default sorting algorithm is such a Dual-Pivot QuickSort.
+
+
+Similar projects
+================
+
+This project bears some similarity with e.g. Google Guava. However, in contrast to
+these projects we are not interested in being able to write complex code with a few
+lines, but instead focus on high performance and flexibility; even if this departs
+with using popular APIs such as java.util.Iterator (see e.g. Google Guavas
+PeekingIterator for a hack around limitations of that particular API).
+
+As such, we are actually more similar to GNU Trove, which provides high-performance
+primitive collections, and for these also has the need to provide non-standard
+iterators ("Iterator.next()" would create a boxed object)
