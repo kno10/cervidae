@@ -36,7 +36,7 @@
 							<mainClass>com.kno10.java.cervidae.algorithms.sort.SortBenchmark</mainClass>
 							<name>benchmark-sort</name>
 							<commandLineArguments>
-								<commandLineArgument>-i micro</commandLineArgument>
+								<commandLineArgument>-i micro -l 300s</commandLineArgument>
 							</commandLineArguments>
 						</program>
 					</programs>
