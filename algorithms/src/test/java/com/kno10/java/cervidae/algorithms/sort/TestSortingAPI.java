@@ -20,7 +20,7 @@ public class TestSortingAPI {
       data[i] = rnd.nextDouble();
     }
     
-    DualPivotQuickSortBo5.sort(DoubleArrayAdapter.STATIC, data);
+    DualPivotQuickSortBo5.STATIC.sort(DoubleArrayAdapter.STATIC, data);
     
     TestSortingAlgorithm.testSorted(data);
   }
@@ -33,7 +33,7 @@ public class TestSortingAPI {
       data[i] = rnd.nextDouble();
     }
     
-    DualPivotQuickSortBo5.sort(new ComparableArrayAdapter<Double, Double>(), data);
+    DualPivotQuickSortBo5.STATIC.sort(new ComparableArrayAdapter<Double, Double>(), data);
     
     for (int i = 1; i < data.length; i++) {
       assertTrue("Array not sorted.", data[i - 1] <= data[i]);
@@ -49,7 +49,7 @@ public class TestSortingAPI {
       data[i] = rnd.nextDouble();
     }
     
-    DualPivotQuickSortBo5.sort(new ComparableArrayAdapter<Double, Object>(), data);
+    DualPivotQuickSortBo5.STATIC.sort(new ComparableArrayAdapter<Double, Object>(), data);
     
     for (int i = 1; i < data.length; i++) {
       assertTrue("Array not sorted.", (Double)data[i - 1] <= (Double)data[i]);

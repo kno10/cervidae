@@ -41,7 +41,7 @@ public class QuickSelectBo5 {
       // Optimization for small arrays
       // This also ensures a minimum size below
       if(start + INSERTION_THRESHOLD > end) {
-        InsertionSort.sort(control, data, start, end);
+        InsertionSort.STATIC.sort(control, data, start, end);
         return;
       }
 

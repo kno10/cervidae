@@ -1,6 +1,5 @@
 package com.kno10.java.cervidae.algorithms.sort;
 
-import com.kno10.java.cervidae.adapter.arraylike.ArrayReadAdapter;
 import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
 
 /**
@@ -12,67 +11,43 @@ import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
  * 
  * @author Erich Schubert
  */
-public class QuickSortTextbook {
+public class QuickSortTextbook extends AbstractArraySortAlgorithm {
   /**
-   * Sort the full array using the given comparator.
-   * 
-   * @param control Controller
-   * @param data Data to sort
+   * Static instance of algorithm.
    */
-  public static <A extends ArrayReadAdapter<? super T, ?> & ArraySortAdapter<? super T>, T> void sort(A control, T data) {
-    sort(control, data, 0, control.length(data));
-  }
+  public static final QuickSortTextbook STATIC = new QuickSortTextbook();
 
-  /**
-   * Sort the array using the given comparator.
-   * 
-   * @param data Data to sort
-   * @param start First index
-   * @param end Last index (exclusive)
-   * @param comp Comparator
-   */
-  public static <T> void sort(ArraySortAdapter<? super T> control, T data, int start, int end) {
-    quickSort(control, data, start, end);
-  }
-
-  /**
-   * Actual recursive QuickSort function.
-   * 
-   * @param data Data to sort
-   * @param start First index
-   * @param end Last index (exclusive!)
-   * @param comp Comparator
-   */
-  private static <T> void quickSort(ArraySortAdapter<? super T> control, T data, final int start, final int end) {
+  @Override
+  public <T> void sort(ArraySortAdapter<? super T> adapter, T data, final int start, final int end) {
     final int last = end - 1;
 
     // We use the last element as pivot:
     int i = start;
     int j = last - 1;
 
-    // This is the classic quicksort loop:
+    // This is the classic QuickSort loop:
     while(true) {
-      while(i <= j && control.greaterThan(data, last, i)) {
+      while(i <= j && adapter.greaterThan(data, last, i)) {
         i++;
       }
-      while(j >= i && !control.greaterThan(data, last, j)) {
+      while(j >= i && !adapter.greaterThan(data, last, j)) {
         j--;
       }
       if(i >= j) {
         break;
       }
-      control.swap(data, i, j);
+      adapter.swap(data, i, j);
     }
 
     // Move pivot back into the appropriate place
-    control.swap(data, i, last);
+    adapter.swap(data, i, last);
 
     // Recursion:
     if(start < i) {
-      sort(control, data, start, i);
+      sort(adapter, data, start, i);
     }
     if(i < last) {
-      sort(control, data, i + 1, end);
+      sort(adapter, data, i + 1, end);
     }
   }
 }

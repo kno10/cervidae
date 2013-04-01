@@ -7,6 +7,8 @@ import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
  * 
  * See e.g. Knuth for details on optimal sorting networks.
  * 
+ * TODO: add optimal sorting networks of other sizes, too!
+ * 
  * @author Erich Schubert
  */
 public class SortingNetworks {
@@ -24,35 +26,35 @@ public class SortingNetworks {
    * @param m5 Position of fourth
    */
   public static <T> void sort5(ArraySortAdapter<T> control, T data, final int m1, final int m2, final int m3, final int m4, final int m5) {
-    if (control.greaterThan(data, m1, m4)) {
+    if(control.greaterThan(data, m1, m4)) {
       control.swap(data, m1, m4);
     }
     //
-    if (control.greaterThan(data, m1, m3)) {
+    if(control.greaterThan(data, m1, m3)) {
       control.swap(data, m1, m3);
     }
-    if (control.greaterThan(data, m2, m5)) {
+    if(control.greaterThan(data, m2, m5)) {
       control.swap(data, m2, m5);
     }
     //
-    if (control.greaterThan(data, m2, m4)) {
+    if(control.greaterThan(data, m2, m4)) {
       control.swap(data, m2, m4);
     }
-    if (control.greaterThan(data, m3, m5)) {
+    if(control.greaterThan(data, m3, m5)) {
       control.swap(data, m3, m5);
     }
     //
-    if (control.greaterThan(data, m1, m2)) {
+    if(control.greaterThan(data, m1, m2)) {
       control.swap(data, m1, m2);
     }
-    if (control.greaterThan(data, m3, m4)) {
+    if(control.greaterThan(data, m3, m4)) {
       control.swap(data, m3, m4);
     }
     //
-    if (control.greaterThan(data, m2, m3)) {
+    if(control.greaterThan(data, m2, m3)) {
       control.swap(data, m2, m3);
     }
-    if (control.greaterThan(data, m4, m5)) {
+    if(control.greaterThan(data, m4, m5)) {
       control.swap(data, m4, m5);
     }
   }
