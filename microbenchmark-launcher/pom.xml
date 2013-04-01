@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.kno10.java.cervidae</groupId>
+		<artifactId>cervidae</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>microbenchmark-launcher</artifactId>
+
+	<name>Cervidae Library - Microbenchmarking Launchers</name>
+
+	<licenses>
+		<license>
+			<name>GNU LGPL</name>
+			<url>http://www.gnu.org/licenses/lgpl.txt</url>
+		</license>
+	</licenses>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.3</version>
+				<configuration>
+					<programs>
+						<program>
+							<mainClass>com.kno10.java.cervidae.algorithms.sort.SortBenchmark</mainClass>
+							<name>benchmark-sort</name>
+							<commandLineArguments>
+								<commandLineArgument>-i micro</commandLineArgument>
+							</commandLineArguments>
+						</program>
+					</programs>
+					<platforms>
+						<platform>unix</platform>
+					</platforms>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.kno10.java.cervidae</groupId>
+			<artifactId>microbenchmark</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+</project>
