@@ -17,13 +17,13 @@ data objects from code objects instead of intermixing data handling and code.
 
 Roughly said, the general design employed looks like this:
 
-Algorithm  ->  Controller  ->  Data
+Algorithm  ->  Adapter  ->  Data
 
 so for example with sorting algorithms:
 
-SortingAlgorithm  ->  ArrayListController  ->  java.util.ArrayList
+SortingAlgorithm  ->  ArrayListAdapter  ->  java.util.ArrayList
 
-SortingAlgorithm  ->  DoubleArrayController  ->  double[]
+SortingAlgorithm  ->  DoubleArrayAdapter  ->  double[]
 
 in contrast to the Java Collections API, by separating algorithms and the
 data storage, the same sorting algorithm can be applied to different datastructures,
