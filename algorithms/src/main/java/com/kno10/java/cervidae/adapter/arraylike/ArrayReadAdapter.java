@@ -1,13 +1,14 @@
-package com.kno10.java.cervidae.controller.arraylike;
+package com.kno10.java.cervidae.adapter.arraylike;
 
 /**
- * Adapter class to control array-like data structures.
+ * Adapter class to read from array-like data structures.
  * 
  * @author Erich Schubert
  * 
  * @param <T> Data structure type
+ * @param <O> Array value type
  */
-public interface ArrayReadController<T, O> {
+public interface ArrayReadAdapter<T, O> {
   /**
    * Get the object at the given position.
    * 

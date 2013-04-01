@@ -1,8 +1,15 @@
-package com.kno10.java.cervidae.controller.arraylike;
+package com.kno10.java.cervidae.adapter.arraylike;
 
 import java.util.ArrayList;
 
-public class ComparableArrayListController<T extends Comparable<? super T>> implements ArrayWriteController<ArrayList<T>, T> {
+/**
+ * Adapter to handle array lists.
+ * 
+ * @author Erich Schubert
+ * 
+ * @param <T> Data type
+ */
+public class ComparableArrayListAdapter<T extends Comparable<? super T>> implements ArrayReadAdapter<ArrayList<T>, T>, ArrayWriteAdapter<ArrayList<T>, T>, ArraySortAdapter<ArrayList<T>> {
   @Override
   public T get(ArrayList<T> data, int pos) {
     return data.get(pos);

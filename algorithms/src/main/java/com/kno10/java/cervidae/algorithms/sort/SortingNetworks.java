@@ -1,6 +1,6 @@
 package com.kno10.java.cervidae.algorithms.sort;
 
-import com.kno10.java.cervidae.controller.arraylike.ArrayWriteController;
+import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
 
 /**
  * Sorting a <b>fixed</b> size of elements, using an optimized sorting network.
@@ -23,7 +23,7 @@ public class SortingNetworks {
    * @param m4 Position of fifth
    * @param m5 Position of fourth
    */
-  public static <T> void sort5(ArrayWriteController<T, ?> control, T data, final int m1, final int m2, final int m3, final int m4, final int m5) {
+  public static <T> void sort5(ArraySortAdapter<T> control, T data, final int m1, final int m2, final int m3, final int m4, final int m5) {
     if (control.greaterThan(data, m1, m4)) {
       control.swap(data, m1, m4);
     }

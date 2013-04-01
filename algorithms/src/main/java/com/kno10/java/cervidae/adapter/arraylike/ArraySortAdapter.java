@@ -1,22 +1,13 @@
-package com.kno10.java.cervidae.controller.arraylike;
+package com.kno10.java.cervidae.adapter.arraylike;
 
 /**
- * Adapter class to control array-like data structures.
+ * Adapter class to sort array-like data structures.
  * 
  * @author Erich Schubert
  * 
  * @param <T> Data structure type
  */
-public interface ArrayWriteController<T, O> extends ArrayReadController<T, O> {
-  /**
-   * Set the value at the given position.
-   * 
-   * @param data Data structure
-   * @param pos Position
-   * @param val Value
-   */
-  void set(T data, int pos, O val);
-
+public interface ArraySortAdapter<T> {
   /**
    * Swap the two elements at positions i and j.
    * 

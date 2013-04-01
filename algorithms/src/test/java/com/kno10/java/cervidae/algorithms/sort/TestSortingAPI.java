@@ -6,8 +6,8 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import com.kno10.java.cervidae.controller.arraylike.ComparableArrayController;
-import com.kno10.java.cervidae.controller.arraylike.DoubleArrayController;
+import com.kno10.java.cervidae.adapter.arraylike.ComparableArrayAdapter;
+import com.kno10.java.cervidae.adapter.arraylike.DoubleArrayAdapter;
 
 public class TestSortingAPI {
   final int size = 10000;
@@ -20,7 +20,7 @@ public class TestSortingAPI {
       data[i] = rnd.nextDouble();
     }
     
-    DualPivotQuickSortBo5.sort(DoubleArrayController.STATIC, data);
+    DualPivotQuickSortBo5.sort(DoubleArrayAdapter.STATIC, data);
     
     TestSortingAlgorithm.testSorted(data);
   }
@@ -33,7 +33,7 @@ public class TestSortingAPI {
       data[i] = rnd.nextDouble();
     }
     
-    DualPivotQuickSortBo5.sort(new ComparableArrayController<Double, Double>(), data);
+    DualPivotQuickSortBo5.sort(new ComparableArrayAdapter<Double, Double>(), data);
     
     for (int i = 1; i < data.length; i++) {
       assertTrue("Array not sorted.", data[i - 1] <= data[i]);
@@ -49,7 +49,7 @@ public class TestSortingAPI {
       data[i] = rnd.nextDouble();
     }
     
-    DualPivotQuickSortBo5.sort(new ComparableArrayController<Double, Object>(), data);
+    DualPivotQuickSortBo5.sort(new ComparableArrayAdapter<Double, Object>(), data);
     
     for (int i = 1; i < data.length; i++) {
       assertTrue("Array not sorted.", (Double)data[i - 1] <= (Double)data[i]);

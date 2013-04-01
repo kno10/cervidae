@@ -1,4 +1,4 @@
-package com.kno10.java.cervidae.controller.arraylike;
+package com.kno10.java.cervidae.adapter.arraylike;
 
 /**
  * Class to control an {@code #primitive#[]} array.
@@ -6,18 +6,18 @@ package com.kno10.java.cervidae.controller.arraylike;
  * @author Erich Schubert
  */
 // #NOTE#
-public class #Primitive#ArrayController implements ArrayWriteController<#primitive#[], #Primitive#> {
+public class #Primitive#ArrayAdapter implements ArrayReadAdapter<#primitive#[], #Primitive#>, ArrayWriteAdapter<#primitive#[], #Primitive#>, ArraySortAdapter<#primitive#[]> {
 	/**
 	 * Adapter for #primitive# arrays.
 	 */
-	public static #Primitive#ArrayController STATIC = new #Primitive#ArrayController();
+	public static #Primitive#ArrayAdapter STATIC = new #Primitive#ArrayAdapter();
 	
 	/**
 	 * Constructor.
 	 * 
 	 * Use the static instance {@link #STATIC} to avoid object allocations!
 	 */
-	public #Primitive#ArrayController() {
+	public #Primitive#ArrayAdapter() {
 		// Nothing to do.
 	}
 	

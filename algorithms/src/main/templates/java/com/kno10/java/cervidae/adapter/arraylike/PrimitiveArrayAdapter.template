@@ -1,5 +1,5 @@
 <template>
-  <input>PrimitiveArrayController.java</input>
+  <input>PrimitiveArrayAdapter.java</input>
   <group>
     <pattern>#NOTE#</pattern>
     <substitute>Note: This code is automatically generated. DO NOT MODIFY.</substitute>
@@ -24,5 +24,5 @@
     <substitute id="6">byte</substitute>
     <substitute id="7">char</substitute>
   </group>
-  <output>#Primitive#ArrayController.java</output>
+  <output>#Primitive#ArrayAdapter.java</output>
 </template>

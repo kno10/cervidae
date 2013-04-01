@@ -1,4 +1,4 @@
-package com.kno10.java.cervidae.controller.arraylike;
+package com.kno10.java.cervidae.adapter.arraylike;
 
 /**
  * Class to process an array of comparable objects.
@@ -6,9 +6,9 @@ package com.kno10.java.cervidae.controller.arraylike;
  * @author Erich Schubert
  * 
  * @param <T> Actual data type
- * @param <S> Array data type
+ * @param <S> Array data type (often: Object)
  */
-public class ComparableArrayController<T extends Comparable<? super T>, S> implements ArrayWriteController<S[], T> {
+public class ComparableArrayAdapter<T extends Comparable<? super T>, S> implements ArrayReadAdapter<S[], T>, ArrayWriteAdapter<S[], T>, ArraySortAdapter<S[]> {
   @SuppressWarnings("unchecked")
   @Override
   public T get(S[] data, int pos) {
