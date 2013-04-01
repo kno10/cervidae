@@ -55,3 +55,38 @@ PeekingIterator for a hack around limitations of that particular API).
 As such, we are actually more similar to GNU Trove, which provides high-performance
 primitive collections, and for these also has the need to provide non-standard
 iterators ("Iterator.next()" would create a boxed object)
+
+
+Contributing
+============
+
+We understand that this fairly new library with it's complicated codebase will
+not be easy to contribute to. However, we really appreciate contributions!
+
+When contributing, please agree to these terms:
+
+1. the contributed code must be your own work, or you must ensure that the
+true author of the code agrees to these terms.
+
+2. you must license the code with the current effective license of cervidae
+
+3. you must allow us to relicense the code at our discretion to any of the
+following open source licenses: GPL-3, LGPL-3, AGPL-3, Apache
+(as we have not yet decided on the final license, and it may turn out to be
+beneficial to dual-license using the more common - for Java code - Apache license)
+
+4. all required copyright statements are already included in your contribution.
+
+
+License
+=======
+As of now, cervidae is LGPL-3 licensed, which can be read in detail at
+http://www.gnu.org/licenses/lgpl.txt
+
+Why LGPL? I do believe in the stronger requirements of
+[Copyleft](https://en.wikipedia.org/wiki/Copyleft), while I do understand that
+for a foundation library such as this, GPL is too strict.
+
+However, since this apparently rules out the use of Cervidae for Apache projects
+I do require all contributors to agree to the option of relicensing the library
+to the Apache license on the long run, if there is a convincing use case.

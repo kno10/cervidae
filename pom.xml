@@ -10,6 +10,13 @@
 	<name>Cervidae Library</name>
 	<url>http://maven.apache.org</url>
 
+	<licenses>
+		<license>
+			<name>GNU LGPL</name>
+			<url>http://www.gnu.org/licenses/lgpl.txt</url>
+		</license>
+	</licenses>
+
 	<modules>
 		<module>codegenerator</module>
 		<module>algorithms</module>
