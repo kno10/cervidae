@@ -1,11 +1,11 @@
 <template>
   <input>PrimitiveArrayAdapter.java</input>
   <group>
-    <pattern>#NOTE#</pattern>
+    <pattern>\$\{NOTE\}</pattern>
     <substitute>Note: This code is automatically generated. DO NOT MODIFY.</substitute>
   </group>
   <group link="1">
-    <pattern>#Primitive#</pattern>
+    <pattern>\$\{Type\}</pattern>
     <substitute id="1">Double</substitute>
     <substitute id="2">Integer</substitute>
     <substitute id="3">Long</substitute>
@@ -15,7 +15,7 @@
     <substitute id="7">Character</substitute>
   </group>
   <group link="1">
-    <pattern>#primitive#</pattern>
+    <pattern>\$\{atype\}</pattern>
     <substitute id="1">double</substitute>
     <substitute id="2">int</substitute>
     <substitute id="3">long</substitute>
@@ -24,5 +24,5 @@
     <substitute id="6">byte</substitute>
     <substitute id="7">char</substitute>
   </group>
-  <output>#Primitive#ArrayAdapter.java</output>
+  <output>${Type}ArrayAdapter.java</output>
 </template>

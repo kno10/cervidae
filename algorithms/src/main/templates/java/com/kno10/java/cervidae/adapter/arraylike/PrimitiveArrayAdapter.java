@@ -1,55 +1,55 @@
 package com.kno10.java.cervidae.adapter.arraylike;
 
 /**
- * Class to control an {@code #primitive#[]} array.
+ * Class to control an {@code ${atype}[]} array.
  * 
  * @author Erich Schubert
  */
-// #NOTE#
-public class #Primitive#ArrayAdapter implements ArrayReadAdapter<#primitive#[], #Primitive#>, ArrayWriteAdapter<#primitive#[], #Primitive#>, ArraySortAdapter<#primitive#[]> {
+// ${NOTE}
+public class ${Type}ArrayAdapter implements ArrayReadAdapter<${atype}[], ${Type}>, ArrayWriteAdapter<${atype}[], ${Type}>, ArraySortAdapter<${atype}[]> {
 	/**
-	 * Adapter for #primitive# arrays.
+	 * Adapter for ${type} arrays.
 	 */
-	public static #Primitive#ArrayAdapter STATIC = new #Primitive#ArrayAdapter();
+	public static ${Type}ArrayAdapter STATIC = new ${Type}ArrayAdapter();
 	
 	/**
 	 * Constructor.
 	 * 
 	 * Use the static instance {@link #STATIC} to avoid object allocations!
 	 */
-	public #Primitive#ArrayAdapter() {
+	public ${Type}ArrayAdapter() {
 		// Nothing to do.
 	}
 	
   @Override
-  public #Primitive# get(#primitive#[] data, int pos) {
+  public ${Type} get(${atype}[] data, int pos) {
     return data[pos];
   }
 
   @Override
-  public void set(#primitive#[] data, int pos, #Primitive# val) {
+  public void set(${atype}[] data, int pos, ${Type} val) {
     data[pos] = val;
   }
 
 	@Override
-	public int length(#primitive#[] data) {
+	public int length(${atype}[] data) {
 		return data.length;
 	}
 
 	@Override
-	public void swap(#primitive#[] data, int i, int j) {
-		#primitive# tmp = data[i];
+	public void swap(${atype}[] data, int i, int j) {
+		${atype} tmp = data[i];
 		data[i] = data[j];
 		data[j] = tmp;
 	}
 
 	@Override
-	public boolean greaterThan(#primitive#[] data, int i, int j) {
+	public boolean greaterThan(${atype}[] data, int i, int j) {
 		return data[i] > data[j];
 	}
 
 	@Override
-	public boolean equals(#primitive#[] data, int i, int j) {
+	public boolean equals(${atype}[] data, int i, int j) {
 		return data[i] == data[j];
 	}
 }
