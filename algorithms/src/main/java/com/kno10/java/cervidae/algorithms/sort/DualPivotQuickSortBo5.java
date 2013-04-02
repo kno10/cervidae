@@ -22,21 +22,46 @@ import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
  */
 public class DualPivotQuickSortBo5 extends AbstractArraySortAlgorithm {
   /**
-   * Static instance.
-   */
-  public static final DualPivotQuickSortBo5 STATIC = new DualPivotQuickSortBo5();
-
-  /**
    * Threshold for using insertion sort. Value taken from Javas QuickSort,
    * assuming that it will be similar for our data sets.
    */
   private static final int INSERTION_THRESHOLD = 47;
 
+  /**
+   * Static instance.
+   */
+  public static final DualPivotQuickSortBo5 STATIC = new DualPivotQuickSortBo5(INSERTION_THRESHOLD);
+
+  /**
+   * Insertion threshold.
+   */
+  private final int threshold;
+
+  /**
+   * Constructor with parameterizable threshold.
+   * 
+   * @param threshold Threshold to switch to insertion sort.
+   */
+  public DualPivotQuickSortBo5(int threshold) {
+    super();
+    this.threshold = threshold;
+  }
+
+  /**
+   * Default constructor.
+   * 
+   * @deprecated For default options, use {@link #STATIC} instead.
+   */
+  @Deprecated
+  public DualPivotQuickSortBo5() {
+    this(INSERTION_THRESHOLD);
+  }
+
   @Override
   public <T> void sort(ArraySortAdapter<? super T> adapter, T data, final int start, final int end) {
     final int len = end - start;
     final int last = end - 1;
-    if(len < INSERTION_THRESHOLD) {
+    if (len < threshold) {
       InsertionSort.STATIC.sort(adapter, data, start, end);
       return;
     }
@@ -67,27 +92,25 @@ public class DualPivotQuickSortBo5 extends AbstractArraySortAlgorithm {
     // Note: we merged the ties and no ties cases.
     // This likely is marginally slower, but not at a macro level
     // And you never know with hotspot.
-    for(int k = left; k <= right; k++) {
-      if(adapter.equals(data, k, start)) {
+    for (int k = left; k <= right; k++) {
+      if (adapter.equals(data, k, start)) {
         continue;
-      }
-      else if(adapter.greaterThan(data, start, k)) {
+      } else if (adapter.greaterThan(data, start, k)) {
         // Traditional QuickSort swap:
-        if(k != left) {
+        if (k != left) {
           adapter.swap(data, k, left);
         }
         left++;
-      }
-      else if(tied || adapter.greaterThan(data, k, last)) {
+      } else if (tied || adapter.greaterThan(data, k, last)) {
         // Now look at the right. First skip correct entries there, too
-        while(k < right && adapter.greaterThan(data, right, last)) {
+        while (k < right && adapter.greaterThan(data, right, last)) {
           right--;
         }
         // Now move current element to the right.
-        if(k < right) {
+        if (k < right) {
           adapter.swap(data, k, right);
           // Test the element we just moved: left or center?
-          if(adapter.greaterThan(data, start, k)) {
+          if (adapter.greaterThan(data, start, k)) {
             adapter.swap(data, left, k);
             left++;
           } // else: center. cannot be on right.
@@ -98,21 +121,21 @@ public class DualPivotQuickSortBo5 extends AbstractArraySortAlgorithm {
     // Put the pivot elements in their appropriate positions.
     adapter.swap(data, start, left - 1);
     adapter.swap(data, last, right + 1);
-    if(adapter.greaterThan(data, right, right + 1)) {
+    if (adapter.greaterThan(data, right, right + 1)) {
       throw new RuntimeException("Sorting error.");
     }
     // Perform recursion:
-    if(start < left - 2) {
+    if (start < left - 2) {
       sort(adapter, data, start, left - 1);
     }
     // Handle the middle part - if necessary:
-    if(!tied && left < right) {
+    if (!tied && left < right) {
       // TODO: the original publication had a special tie handling here.
       // It shouldn't affect correctness, but probably improves situations
       // with a lot of tied elements.
       sort(adapter, data, left, right + 1);
     }
-    if(right + 3 < end) {
+    if (right + 3 < end) {
       sort(adapter, data, right + 2, end);
     }
   }

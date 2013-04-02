@@ -12,21 +12,48 @@ import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
  */
 public class QuickSortBo3 extends AbstractArraySortAlgorithm {
   /**
-   * Static instance of algorithm.
-   */
-  public static final QuickSortBo3 STATIC = new QuickSortBo3();
-
-  /**
    * Threshold for using insertion sort. Value taken from Javas QuickSort,
    * assuming that it will be similar for our data sets.
    */
   private static final int INSERTION_THRESHOLD = 47;
 
+  /**
+   * Static instance of algorithm.
+   */
+  public static final QuickSortBo3 STATIC = new QuickSortBo3(INSERTION_THRESHOLD);
+
+  /**
+   * Insertion threshold.
+   */
+  private final int threshold;
+
+  /**
+   * Constructor with parameterizable threshold.
+   * 
+   * @param threshold Threshold to switch to insertion sort.
+   */
+  public QuickSortBo3(int threshold) {
+    super();
+    this.threshold = threshold;
+  }
+
+  /**
+   * Default constructor.
+   * 
+   * @deprecated For default options, use {@link #STATIC} instead.
+   */
+  @Deprecated
+  public QuickSortBo3() {
+    this(INSERTION_THRESHOLD);
+  }
+
+
+
   @Override
   public <T> void sort(ArraySortAdapter<? super T> adapter, T data, final int start, final int end) {
     final int len = end - start;
     final int last = end - 1;
-    if(len < INSERTION_THRESHOLD) {
+    if(len < threshold) {
       InsertionSort.STATIC.sort(adapter, data, start, end);
       return;
     }
