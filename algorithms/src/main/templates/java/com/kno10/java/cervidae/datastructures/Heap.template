@@ -1,0 +1,63 @@
+<template>
+  <input id="1">Heap.java</input>
+  <output id="1">${Type}Heap.java</output>
+  <group>
+    <pattern>\$\{NOTE\}</pattern>
+    <substitute>Note: This code is automatically generated. DO NOT MODIFY.</substitute>
+  </group>
+  <group link="1">
+    <!-- uppercase type, used in class names -->
+    <pattern>\$\{Type\}</pattern>
+    <substitute id="1">Double</substitute>
+    <substitute id="2">Integer</substitute>
+    <substitute id="3">Long</substitute>
+    <substitute id="4">Short</substitute>
+    <substitute id="5">Float</substitute>
+    <substitute id="6">Byte</substitute>
+    <substitute id="7">Character</substitute>
+    <substitute id="8">Object</substitute>
+  </group>
+  <group link="1">
+    <!-- uppercase type of parent classes (Object for Comparable!) -->
+    <!-- TODO: remove! -->
+    <pattern>\$\{parent-Type\}</pattern>
+    <substitute id="1">Double</substitute>
+    <substitute id="2">Integer</substitute>
+    <substitute id="3">Long</substitute>
+    <substitute id="4">Short</substitute>
+    <substitute id="5">Float</substitute>
+    <substitute id="6">Byte</substitute>
+    <substitute id="7">Character</substitute>
+    <substitute id="8">Object</substitute>
+  </group>
+  <group link="1">
+    <!-- API type - in method signatures -->
+    <pattern>\$\{api-type\}</pattern>
+    <substitute id="1">double</substitute>
+    <substitute id="2">int</substitute>
+    <substitute id="3">long</substitute>
+    <substitute id="4">short</substitute>
+    <substitute id="5">float</substitute>
+    <substitute id="6">byte</substitute>
+    <substitute id="7">char</substitute>
+    <substitute id="8">K</substitute>
+  </group>
+  <group link="1">
+    <!-- Generics in class definition -->
+    <pattern>\$\{def-generics\}</pattern>
+    <substitute></substitute>
+    <substitute id="8">&lt;K&gt;</substitute>
+  </group>
+  <group link="1">
+    <!-- Generics when used e.g. with "implements" -->
+    <pattern>\$\{use-generics\}</pattern>
+    <substitute></substitute>
+    <substitute id="8">&lt;K&gt;</substitute>
+  </group>
+  <group link="1">
+    <!-- Unchecked cast -->
+    <pattern>(\n *\* *)+\$\{generics-documentation\} *</pattern>
+    <substitute></substitute>
+    <substitute id="8">$1@param &lt;K&gt; Key type</substitute>
+  </group>
+</template>
