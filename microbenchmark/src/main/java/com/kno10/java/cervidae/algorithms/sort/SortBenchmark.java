@@ -19,6 +19,9 @@ public class SortBenchmark extends Benchmark {
   @Param({ "10", "100", "1000", "10000" })
   int size;
 
+  @Param({ ".01", ".1", ".5", "1" })
+  double randomness;
+
   static final String BASE = "com.kno10.java.cervidae.algorithms.sort.";
 
   @Param({ //
@@ -42,8 +45,7 @@ public class SortBenchmark extends Benchmark {
   protected void setUp() {
     try {
       alg = (ArraySortAlgorithm) Class.forName(algname).newInstance();
-    }
-    catch(Exception e) {
+    } catch (Exception e) {
       System.err.println("Exception loading algorithm: " + algname + ": " + e);
       e.printStackTrace(System.err);
       throw new RuntimeException("Exception loading algorithm: " + algname, e);
@@ -51,14 +53,14 @@ public class SortBenchmark extends Benchmark {
     // @Param values are guaranteed to have been injected by now
     array = new double[size];
     Random rnd = new Random(0);
-    for(int i = 0; i < size; i++) {
-      array[i] = rnd.nextDouble();
+    for (int i = 0; i < size; i++) {
+      array[i] = rnd.nextDouble() * randomness + i * (1. - randomness) / size;
     }
   }
 
   public double timeSortPrimitiveDoubles(int reps) {
     double ret = 0.0;
-    for(int i = 0; i < reps; i++) {
+    for (int i = 0; i < reps; i++) {
       double[] tmp = array.clone();
       alg.sort(DoubleArrayAdapter.STATIC, tmp);
       ret += tmp[0] + tmp[tmp.length - 1];
@@ -68,9 +70,9 @@ public class SortBenchmark extends Benchmark {
 
   public double timeSortObjects(int reps) {
     double ret = 0.0;
-    for(int i = 0; i < reps; i++) {
+    for (int i = 0; i < reps; i++) {
       Double[] tmp = new Double[array.length];
-      for(int j = 0; j < array.length; j++) {
+      for (int j = 0; j < array.length; j++) {
         tmp[j] = array[j];
       }
       alg.sort(new ComparableArrayAdapter<>(), tmp);
@@ -79,16 +81,14 @@ public class SortBenchmark extends Benchmark {
     return ret;
   }
 
-  class JavaSort extends AbstractArraySortAlgorithm {
+  public static class JavaSort extends AbstractArraySortAlgorithm {
     @Override
     public <T> void sort(ArraySortAdapter<? super T> adapter, T data, int start, int end) {
-      if(adapter instanceof DoubleArrayAdapter) {
+      if (adapter instanceof DoubleArrayAdapter) {
         Arrays.sort((double[]) data, start, end);
-      }
-      else if(adapter instanceof ComparableArrayAdapter) {
+      } else if (adapter instanceof ComparableArrayAdapter) {
         Arrays.sort((Object[]) data, start, end);
-      }
-      else {
+      } else {
         throw new RuntimeException("Can't sort with official Java classes.");
       }
     }
