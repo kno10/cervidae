@@ -46,7 +46,7 @@ public class CervidaeGeneratorMojo extends AbstractMojo {
     scanner.setCaseSensitive(false);
     scanner.scan();
     String[] files = scanner.getIncludedFiles();
-    for(String file : files) {
+    for (String file : files) {
       processTemplate(file);
     }
   }
@@ -57,24 +57,22 @@ public class CervidaeGeneratorMojo extends AbstractMojo {
     try (FileInputStream in = new FileInputStream(specf)) {
       XMLInputFactory factory = XMLInputFactory.newInstance();
       XMLStreamReader parser = factory.createXMLStreamReader(in);
-      while(true) {
+      while (true) {
         int event = parser.next();
-        if(event == XMLStreamConstants.END_DOCUMENT) {
+        if (event == XMLStreamConstants.END_DOCUMENT) {
           parser.close();
           break;
         }
-        if(event == XMLStreamConstants.START_ELEMENT) {
-          if("template".equals(parser.getLocalName())) {
+        if (event == XMLStreamConstants.START_ELEMENT) {
+          if ("template".equals(parser.getLocalName())) {
             String outdir = new File(outputDirectory + "/" + specfn).getParent();
             loadTemplate(parser, lastmod).process(specf.getParent(), outdir);
           }
         }
       }
-    }
-    catch(IOException e) {
+    } catch (IOException e) {
       throw new MojoFailureException("I/O error loading template.", e);
-    }
-    catch(XMLStreamException e) {
+    } catch (XMLStreamException e) {
       throw new MojoFailureException("I/O error loading template.", e);
     }
   }
@@ -82,27 +80,38 @@ public class CervidaeGeneratorMojo extends AbstractMojo {
   private TemplateSpec loadTemplate(XMLStreamReader parser, long lastmod) throws XMLStreamException {
     TemplateSpec template = new TemplateSpec();
     template.lastmod = lastmod;
-    while(true) {
+    while (true) {
       int event = parser.next();
-      if(event == XMLStreamConstants.END_DOCUMENT) {
+      if (event == XMLStreamConstants.END_DOCUMENT) {
         throw new XMLStreamException("End of stream with open template specification?!?");
       }
-      if(event == XMLStreamConstants.END_ELEMENT) {
-        if("template".equals(parser.getLocalName())) {
+      if (event == XMLStreamConstants.END_ELEMENT) {
+        if ("template".equals(parser.getLocalName())) {
           return template;
         }
       }
-      if(event == XMLStreamConstants.START_ELEMENT) {
-        switch(parser.getLocalName()){
-        case "input":
-          template.input = loadCharacters(parser);
+      if (event == XMLStreamConstants.START_ELEMENT) {
+        switch(parser.getLocalName()) {
+        case "input": {
+          String id = parser.getAttributeValue(null, "id");
+          if (id == null) {
+            id = "DEFAULT";
+          }
+          template.input.put(id, loadCharacters(parser));
           break;
-        case "output":
-          template.output = loadCharacters(parser);
+        }
+        case "output": {
+          String id = parser.getAttributeValue(null, "id");
+          if (id == null) {
+            id = "DEFAULT";
+          }
+          template.output.put(id, loadCharacters(parser));
           break;
-        case "group":
+        }
+        case "group": {
           template.groups.add(loadGroup(parser));
           break;
+        }
         default:
           throw new XMLStreamException("Unexpected element: " + parser.getLocalName());
         }
@@ -113,41 +122,49 @@ public class CervidaeGeneratorMojo extends AbstractMojo {
   private String loadCharacters(XMLStreamReader parser) throws XMLStreamException {
     String node = parser.getLocalName();
     int event = parser.next();
-    if(event != XMLStreamConstants.CHARACTERS) {
-      throw new XMLStreamException("Expected characters, got event type " + event);
+    StringBuilder buf = new StringBuilder();
+    while (true) {
+      if (event == XMLStreamConstants.CHARACTERS || event == XMLStreamConstants.ENTITY_REFERENCE) {
+        buf.append(parser.getText());
+      } else if (event == XMLStreamConstants.START_ELEMENT) {
+        throw new XMLStreamException("Expected end element, got new element: <" + parser.getLocalName() + "... -- improperly escaped < in string?");
+      } else if (event == XMLStreamConstants.COMMENT) {
+        // do nothing
+      } else { // usually: END_ELEMENT
+        break;
+      }
+      event = parser.next();
     }
-    String ret = parser.getText();
-    event = parser.next();
-    if(event != XMLStreamConstants.END_ELEMENT) {
-      throw new XMLStreamException("Expected end element, got event type " + event);
+    if (event != XMLStreamConstants.END_ELEMENT) {
+      throw new XMLStreamException("Expected end element, got event type " + event + " " + parser.getLocalName());
     }
-    if(!node.equals(parser.getLocalName())) {
+    if (!node.equals(parser.getLocalName())) {
       throw new XMLStreamException("Expected end element for " + node + ", got end element " + parser.getLocalName());
     }
-    return ret;
+    return buf.toString();
   }
 
   private Group loadGroup(XMLStreamReader parser) throws XMLStreamException {
     Group group = new Group();
     group.link = parser.getAttributeValue(null, "link");
-    while(true) {
+    while (true) {
       int event = parser.next();
-      if(event == XMLStreamConstants.END_DOCUMENT) {
+      if (event == XMLStreamConstants.END_DOCUMENT) {
         throw new XMLStreamException("End of stream with open group specification?!?");
       }
-      if(event == XMLStreamConstants.END_ELEMENT) {
-        if("group".equals(parser.getLocalName())) {
+      if (event == XMLStreamConstants.END_ELEMENT) {
+        if ("group".equals(parser.getLocalName())) {
           return group;
         }
       }
-      if(event == XMLStreamConstants.START_ELEMENT) {
-        switch(parser.getLocalName()){
+      if (event == XMLStreamConstants.START_ELEMENT) {
+        switch(parser.getLocalName()) {
         case "pattern":
           group.pattern = Pattern.compile(loadCharacters(parser));
           break;
         case "substitute":
           String id = parser.getAttributeValue(null, "id");
-          if(id == null) {
+          if (id == null) {
             id = "DEFAULT";
           }
           group.substitutions.put(id, loadCharacters(parser));
@@ -170,7 +187,7 @@ public class CervidaeGeneratorMojo extends AbstractMojo {
     /**
      * File names.
      */
-    String input, output;
+    HashMap<String, String> input = new HashMap<>(), output = new HashMap<>();
 
     /**
      * Substitution groups.
@@ -178,47 +195,48 @@ public class CervidaeGeneratorMojo extends AbstractMojo {
     ArrayList<Group> groups = new ArrayList<>();
 
     void process(String templatedir, String outputdir) throws IOException {
-      final String data;
-      final File tf = new File(templatedir + "/" + input);
-      lastmod = Math.max(lastmod, tf.lastModified());
-      try (FileInputStream in = new FileInputStream(tf)) {
-        StringBuilder out = new StringBuilder();
-        byte[] b = new byte[4096];
-        for(int n; (n = in.read(b)) != -1;) {
-          out.append(new String(b, 0, n));
+      for (String key : input.keySet()) {
+        String inf = input.get(key);
+        String ouf = output.get(key);
+        final String data;
+        final File tf = new File(templatedir + "/" + inf);
+        lastmod = Math.max(lastmod, tf.lastModified());
+        try (FileInputStream in = new FileInputStream(tf)) {
+          StringBuilder out = new StringBuilder();
+          byte[] b = new byte[4096];
+          for (int n; (n = in.read(b)) != -1;) {
+            out.append(new String(b, 0, n));
+          }
+          data = out.toString();
         }
-        data = out.toString();
+        process(ouf, data, outputdir, 0, new HashMap<String, String>());
       }
-
-      process(output, data, outputdir, 0, new HashMap<String, String>());
     }
 
     private void process(String outname, String data, String outputdir, int i, Map<String, String> linkmap) throws IOException {
-      if(i < groups.size()) {
+      if (i < groups.size()) {
         Group group = groups.get(i);
         String v = group.link != null ? linkmap.get(group.link) : null;
-        if(v != null) {
-          String newname = group.pattern.matcher(outname).replaceAll(group.substitutions.get(v));
-          String newdata = group.pattern.matcher(data).replaceAll(group.substitutions.get(v));
+        if (v != null) {
+          String newname = group.pattern.matcher(outname).replaceAll(group.getSubst(v));
+          String newdata = group.pattern.matcher(data).replaceAll(group.getSubst(v));
           process(newname, newdata, outputdir, i + 1, linkmap);
-        }
-        else {
-          for(String id : group.substitutions.keySet()) {
-            if(group.link != null) {
+        } else {
+          for (String id : group.substitutions.keySet()) {
+            if (group.link != null) {
               linkmap.put(group.link, id);
             }
-            String newname = group.pattern.matcher(outname).replaceAll(group.substitutions.get(id));
-            String newdata = group.pattern.matcher(data).replaceAll(group.substitutions.get(id));
+            String newname = group.pattern.matcher(outname).replaceAll(group.getSubst(id));
+            String newdata = group.pattern.matcher(data).replaceAll(group.getSubst(id));
             process(newname, newdata, outputdir, i + 1, linkmap);
-            if(group.link != null) {
+            if (group.link != null) {
               linkmap.remove(group.link);
             }
           }
         }
-      }
-      else {
+      } else {
         final File oname = new File(outputdir + "/" + outname);
-        if(!oname.canRead() || oname.lastModified() < lastmod) {
+        if (!oname.canRead() || oname.lastModified() < lastmod) {
           System.out.println("Generating " + oname);
           // Ensure the directory exists:
           oname.getParentFile().mkdirs();
@@ -236,7 +254,7 @@ public class CervidaeGeneratorMojo extends AbstractMojo {
    * 
    * @author Erich Schubert
    */
-  private class Group {
+  class Group {
     /**
      * Link ID.
      */
@@ -251,5 +269,20 @@ public class CervidaeGeneratorMojo extends AbstractMojo {
      * Substitution rules.
      */
     Map<String, String> substitutions = new HashMap<>();
+
+    /**
+     * Get a substitution pattern.
+     * 
+     * @param v group id.
+     * @return Value
+     */
+    String getSubst(String v) {
+      String r = substitutions.get(v);
+      if (r == null) {
+        return substitutions.get("DEFAULT");
+      } else {
+        return r;
+      }
+    }
   }
 }
