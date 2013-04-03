@@ -20,7 +20,8 @@
 
 	<modules>
 		<module>codegenerator</module>
-		<module>algorithms</module>
+		<module>api</module>
+		<module>candidates</module>
 		<module>microbenchmark</module>
 		<module>microbenchmark-launcher</module>
 	</modules>
