@@ -2,7 +2,6 @@ package com.kno10.java.cervidae.algorithms.sort;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
-import java.util.Random;
 
 import com.google.caliper.Benchmark;
 import com.google.caliper.Param;
@@ -10,6 +9,7 @@ import com.google.caliper.runner.CaliperMain;
 import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
 import com.kno10.java.cervidae.adapter.arraylike.ComparableArrayAdapter;
 import com.kno10.java.cervidae.adapter.arraylike.DoubleArrayAdapter;
+import com.kno10.java.cervidae.algorithms.sort.SortBenchmarkUtil.MacroPattern;
 
 /**
  * Benchmark class for sorting algorithms.
@@ -20,12 +20,12 @@ public class SortThresholdBenchmark extends Benchmark {
   @Param({ "10000" })
   int size;
 
-  @Param({ ".01", ".1", ".5", "1" })
+  @Param({ ".01", ".1", ".5", ".9", "1" })
   double randomness;
 
   static final String BASE = "com.kno10.java.cervidae.algorithms.sort.";
-  
-  @Param({"10", "20", "30", "40", "50"})
+
+  @Param({ "10", "20", "30", "40", "50" })
   int threshold;
 
   @Param({ //
@@ -36,6 +36,9 @@ public class SortThresholdBenchmark extends Benchmark {
   String algname;
 
   ArraySortAlgorithm alg;
+
+  @Param({ "INCREASING", "DECREASING", "SAW8" })
+  MacroPattern pattern;
 
   /**
    * The unsorted data.
@@ -52,12 +55,7 @@ public class SortThresholdBenchmark extends Benchmark {
       e.printStackTrace(System.err);
       throw new RuntimeException("Exception loading algorithm: " + algname, e);
     }
-    // @Param values are guaranteed to have been injected by now
-    array = new double[size];
-    Random rnd = new Random(0);
-    for (int i = 0; i < size; i++) {
-      array[i] = rnd.nextDouble() * randomness + i * (1. - randomness) / size;
-    }
+    array = SortBenchmarkUtil.generateRandomData(size, pattern, randomness, 0L);
   }
 
   public double timeSortPrimitiveDoubles(int reps) {
