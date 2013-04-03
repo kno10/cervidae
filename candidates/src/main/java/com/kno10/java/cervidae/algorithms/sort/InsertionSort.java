@@ -5,6 +5,9 @@ import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
 /**
  * Insertion sort. Only recommended for small arrays.
  * 
+ * Note: this class is mostly included for completeness. It is a known fact that
+ * bubble sort is much slower than QuickSort.
+ * 
  * @author Erich Schubert
  */
 public class InsertionSort extends AbstractArraySortAlgorithm {
