@@ -120,9 +120,6 @@ public class DualPivotQuickSortBo5 extends AbstractArraySortAlgorithm {
     // Put the pivot elements in their appropriate positions.
     adapter.swap(data, start, left - 1);
     adapter.swap(data, last, right + 1);
-    if (adapter.greaterThan(data, right, right + 1)) {
-      throw new RuntimeException("Sorting error.");
-    }
     // Perform recursion:
     if (start < left - 2) {
       sort(adapter, data, start, left - 1);

@@ -5,11 +5,11 @@ import java.util.Arrays;
 import com.google.caliper.Benchmark;
 import com.google.caliper.Param;
 import com.google.caliper.api.Macrobenchmark;
+import com.google.caliper.api.SkipThisScenarioException;
 import com.google.caliper.runner.CaliperMain;
 import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
 import com.kno10.java.cervidae.adapter.arraylike.ComparableArrayAdapter;
 import com.kno10.java.cervidae.adapter.arraylike.DoubleArrayAdapter;
-import com.kno10.java.cervidae.adapter.comparator.DoubleComparator;
 import com.kno10.java.cervidae.algorithms.sort.SortBenchmarkUtil.MacroPattern;
 
 /**
@@ -43,7 +43,7 @@ public class SortBenchmark extends Benchmark {
 
   ArraySortAlgorithm alg;
 
-  @Param({ "INCREASING", "DECREASING", "SAW8" })
+  @Param({ "INCREASING", "DECREASING", "SAW8", "DECINC", "CONSTANT" })
   MacroPattern pattern;
 
   /**
@@ -97,7 +97,8 @@ public class SortBenchmark extends Benchmark {
       } else if (adapter instanceof ComparableArrayAdapter) {
         Arrays.sort((Object[]) data, start, end);
       } else {
-        throw new RuntimeException("Can't sort with official Java classes.");
+        // Can't use this trivially, would need adapter classes.
+        throw new SkipThisScenarioException();
       }
     }
   }
@@ -106,12 +107,7 @@ public class SortBenchmark extends Benchmark {
     @Override
     public <T> void sort(ArraySortAdapter<? super T> adapter, T data, int start, int end) {
       if (adapter instanceof DoubleArrayAdapter) {
-        DoubleArrayQuickSort.sort((double[]) data, start, end, new DoubleComparator() {
-          @Override
-          public int compare(double arg0, double arg1) {
-            return Double.compare(arg0, arg1);
-          }
-        });
+        DoubleArrayQuickSort.STATIC.ascending((double[]) data, start, end);
       } else {
         DualPivotQuickSortBo5.STATIC.sort(adapter, data, start, end);
       }

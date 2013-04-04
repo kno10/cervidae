@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.kno10.java.cervidae.adapter.arraylike.ComparableArrayAdapter;
 import com.kno10.java.cervidae.adapter.arraylike.DoubleArrayAdapter;
+import com.kno10.java.cervidae.comparator.PrimitiveComparators;
 
 public class TestSortingAPI {
   final int size = 10000;
@@ -21,6 +22,19 @@ public class TestSortingAPI {
     }
     
     DualPivotQuickSortBo5.STATIC.sort(DoubleArrayAdapter.STATIC, data);
+    
+    TestSortingAlgorithm.testSorted(data);
+  }
+
+  @Test
+  public void testPrimtiveDoubleOptimized() {
+    double[] data = new double[size];
+    Random rnd = new Random(0L);
+    for (int i = 0; i < data.length; i++) {
+      data[i] = rnd.nextDouble();
+    }
+    
+    DoubleArrayQuickSort.STATIC.sort(data, PrimitiveComparators.DOUBLE_ASCENDING);
     
     TestSortingAlgorithm.testSorted(data);
   }

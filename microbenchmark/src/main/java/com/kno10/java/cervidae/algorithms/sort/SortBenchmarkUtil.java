@@ -34,6 +34,12 @@ public final class SortBenchmarkUtil {
         return (pos % (length >> 3)) / (double) (length >> 3);
       }
     },
+    CONSTANT {
+      @Override
+      public double val(int pos, int length) {
+        return 0;
+      }
+    },
     ;
     abstract public double val(int pos, int length);
   }

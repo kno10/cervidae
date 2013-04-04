@@ -1,12 +1,10 @@
 Cervidae TODO list
 ==================
 
-1. QuickSort algorithms don't necessarily require `length`, which can be expensive
-with a disk- or database backed array.
+1. TimSort would be nice to have
 
-2. TimSort would be nice to have
+2. Try to reproduce the optimizations in JDK sort(double[]) in a general way.
 
-3. Heaps. Convert the existing ELKI templates to cervidae templating.
+3. HeapSort, for completeness (although we can't expect it to be better)
 
-4. Benchmarking! Caliper seems to be a good choice, but is currently not available
-via maven, plus it requires literally tons of dependencies.
+4. More benchmarking.

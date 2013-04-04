@@ -1,7 +1,9 @@
-package com.kno10.java.cervidae.adapter.comparator;
+package com.kno10.java.cervidae.comparator;
 
 /**
  * Interface for comparing two ${Type}.
+ * 
+ * For default comparators, see {@link com.kno10.java.cervidae.comparator.PrimitiveComparators}
  * 
  * @author Erich Schubert
  */

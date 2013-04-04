@@ -21,6 +21,7 @@
 	<modules>
 		<module>codegenerator</module>
 		<module>api</module>
+		<module>core</module>
 		<module>candidates</module>
 		<module>microbenchmark</module>
 		<module>microbenchmark-launcher</module>
