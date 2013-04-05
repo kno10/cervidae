@@ -17,6 +17,8 @@ public class SortingNetworks {
    * 
    * See Knuth for details.
    * 
+   * Note: for this to make sense, {@code m1 < m2 < m3 < m4 < m5} should hold!
+   * 
    * @param control Controller
    * @param data Data array
    * @param m1 Position of first

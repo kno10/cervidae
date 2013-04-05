@@ -46,6 +46,13 @@
 								<commandLineArgument>-i macro -l 300s</commandLineArgument>
 							</commandLineArguments>
 						</program>
+						<program>
+							<mainClass>com.kno10.java.cervidae.algorithms.sort5.Sort5Benchmark</mainClass>
+							<name>benchmark-sort5</name>
+							<commandLineArguments>
+								<commandLineArgument>-i micro</commandLineArgument>
+							</commandLineArguments>
+						</program>
 					</programs>
 					<platforms>
 						<platform>unix</platform>

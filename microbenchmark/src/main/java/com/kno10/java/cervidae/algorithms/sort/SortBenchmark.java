@@ -75,6 +75,15 @@ public class SortBenchmark extends Benchmark {
     return ret;
   }
 
+  // Microbenchmarking variant:
+  public double timeSortPrimitiveDoubles(int reps) {
+    double ret = 0.0;
+    for (int i = 0; i < reps; i++) {
+      ret += benchmarkSortPrimitiveDoubles();
+    }
+    return ret;
+  }
+
   @Macrobenchmark
   public double benchmarkSortObjects() {
     double ret = 0.0;
@@ -86,6 +95,15 @@ public class SortBenchmark extends Benchmark {
     alg.sort(new ComparableArrayAdapter<>(), tmp);
     ret += tmp[0] + tmp[tmp.length - 1];
     // }
+    return ret;
+  }
+
+  // Microbenchmarking variant:
+  public double timeSortObjects(int reps) {
+    double ret = 0.0;
+    for (int i = 0; i < reps; i++) {
+      ret += benchmarkSortObjects();
+    }
     return ret;
   }
 

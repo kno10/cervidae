@@ -1,0 +1,64 @@
+<template>
+  <input id="if">PrimitiveSort5.java</input>
+  <output id="if">${Type}Sort5.java</output>
+  <input id="iA">PrimitiveInsertionSort5A.java</input>
+  <output id="iA">${Type}InsertionSort5A.java</output>
+  <input id="iB">PrimitiveInsertionSort5B.java</input>
+  <output id="iB">${Type}InsertionSort5B.java</output>
+  <input id="iC">PrimitiveInsertionSort5C.java</input>
+  <output id="iC">${Type}InsertionSort5C.java</output>
+  <input id="iD">PrimitiveInsertionSort5D.java</input>
+  <output id="iD">${Type}InsertionSort5D.java</output>
+  <input id="iE">PrimitiveInsertionSort5E.java</input>
+  <output id="iE">${Type}InsertionSort5E.java</output>
+  <input id="iF">PrimitiveInsertionSort5F.java</input>
+  <output id="iF">${Type}InsertionSort5F.java</output>
+  <input id="iG">PrimitiveInsertionSort5G.java</input>
+  <output id="iG">${Type}InsertionSort5G.java</output>
+  <input id="iH">PrimitiveInsertionSort5H.java</input>
+  <output id="iH">${Type}InsertionSort5H.java</output>
+  <input id="dA">PrimitiveDecisionSort5A.java</input>
+  <output id="dA">${Type}DecisionSort5A.java</output>
+  <input id="dB">PrimitiveDecisionSort5B.java</input>
+  <output id="dB">${Type}DecisionSort5B.java</output>
+  <input id="bA">PrimitiveBubbleSort5A.java</input>
+  <output id="bA">${Type}BubbleSort5A.java</output>
+  <input id="bB">PrimitiveBubbleSort5B.java</input>
+  <output id="bB">${Type}BubbleSort5B.java</output>
+  <input id="n">PrimitiveNetworkSort5.java</input>
+  <output id="n">${Type}NetworkSort5.java</output>
+  <group>
+    <pattern>\$\{NOTE\}</pattern>
+    <substitute>Note: This code is automatically generated. DO NOT MODIFY.</substitute>
+  </group>
+  <group link="1">
+    <pattern>\$\{Type\}</pattern>
+    <substitute id="1">Double</substitute>
+    <substitute id="2">Integer</substitute>
+    <substitute id="3">Long</substitute>
+    <substitute id="4">Short</substitute>
+    <substitute id="5">Float</substitute>
+    <substitute id="6">Byte</substitute>
+    <substitute id="7">Character</substitute>
+  </group>
+  <group link="1">
+    <pattern>\$\{atype\}</pattern>
+    <substitute id="1">double</substitute>
+    <substitute id="2">int</substitute>
+    <substitute id="3">long</substitute>
+    <substitute id="4">short</substitute>
+    <substitute id="5">float</substitute>
+    <substitute id="6">byte</substitute>
+    <substitute id="7">char</substitute>
+  </group>
+  <group link="1">
+    <pattern>\$\{type\}</pattern>
+    <substitute id="1">double</substitute>
+    <substitute id="2">int</substitute>
+    <substitute id="3">long</substitute>
+    <substitute id="4">short</substitute>
+    <substitute id="5">float</substitute>
+    <substitute id="6">byte</substitute>
+    <substitute id="7">char</substitute>
+  </group>
+</template>

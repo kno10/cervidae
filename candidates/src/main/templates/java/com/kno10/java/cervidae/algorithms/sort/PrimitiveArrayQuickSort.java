@@ -1,5 +1,7 @@
 package com.kno10.java.cervidae.algorithms.sort;
 
+import java.util.Comparator;
+
 import com.kno10.java.cervidae.comparator.${Type}Comparator;
 
 /**
@@ -55,7 +57,7 @@ public class ${Type}ArrayQuickSort {
   public ${Type}ArrayQuickSort() {
     this(INSERTION_THRESHOLD);
   }
-  
+
   /**
    * Sort the full array using the given comparator.
    * 
@@ -65,7 +67,7 @@ public class ${Type}ArrayQuickSort {
   public void sort(${atype}[] data, ${Type}Comparator comp) {
     sort(data, 0, data.length, comp);
   }
-
+  
   /**
    * Sort the array using the given comparator.
    * 
@@ -78,82 +80,28 @@ public class ${Type}ArrayQuickSort {
     final int len = end - start;
     final int last = end - 1;
     if (len < threshold) {
-      // Classic insertion sort.
-      for (int i = start + 1; i < end; i++) {
-        for (int j = i; j > start && comp.compare(data[j], data[j - 1]) < 0; j--) {
-          final ${type} tmp = data[j - 1];
-          data[j - 1] = data[j];
-          data[j] = tmp;
-        }
-      }
+      insertionSort(data, start, end, comp);
       return;
     }
 
     // Choose pivots by looking at five candidates.
     final int seventh = (len >> 3) + (len >> 6) + 1;
-    final int m3 = start + (len >> 1); // middle
-    final int m2 = m3 - seventh;
-    final int m1 = m2 - seventh;
-    final int m4 = m3 + seventh;
-    final int m5 = m4 + seventh;
+    final int d3 = start + (len >> 1); // middle
+    final int d2 = d3 - seventh;
+    final int d1 = d2 - seventh;
+    final int d4 = d3 + seventh;
+    final int d5 = d4 + seventh;
 
+    // Sort the five candidates:
     // Explicit (and optimal) sorting network for 5 elements
     // See Knuth for details.
-    if (comp.compare(data[m1], data[m4]) > 0) {
-      final ${type} tmp = data[m4];
-      data[m4] = data[m1];
-      data[m1] = tmp;
-    }
-    //
-    if (comp.compare(data[m1], data[m3]) > 0) {
-      final ${type} tmp = data[m3];
-      data[m3] = data[m1];
-      data[m1] = tmp;
-    }
-    if (comp.compare(data[m2], data[m5]) > 0) {
-      final ${type} tmp = data[m5];
-      data[m5] = data[m2];
-      data[m2] = tmp;
-    }
-    //
-    if (comp.compare(data[m2], data[m4]) > 0) {
-      final ${type} tmp = data[m4];
-      data[m4] = data[m2];
-      data[m2] = tmp;
-    }
-    if (comp.compare(data[m3], data[m5]) > 0) {
-      final ${type} tmp = data[m5];
-      data[m5] = data[m3];
-      data[m3] = tmp;
-    }
-    //
-    if (comp.compare(data[m1], data[m2]) > 0) {
-      final ${type} tmp = data[m2];
-      data[m2] = data[m1];
-      data[m1] = tmp;
-    }
-    if (comp.compare(data[m3], data[m4]) > 0) {
-      final ${type} tmp = data[m4];
-      data[m4] = data[m3];
-      data[m3] = tmp;
-    }
-    //
-    if (comp.compare(data[m2], data[m3]) > 0) {
-      final ${type} tmp = data[m3];
-      data[m3] = data[m2];
-      data[m2] = tmp;
-    }
-    if (comp.compare(data[m4], data[m5]) > 0) {
-      final ${type} tmp = data[m5];
-      data[m5] = data[m4];
-      data[m4] = tmp;
-    }
+    sort5(data, d1, d2, d3, d4, d5, comp);
 
     // Choose the 2 and 4th as pivots, as we want to get three parts
-    final ${type} lpivot = data[m2];
-    final ${type} rpivot = data[m4];
-    data[m2] = data[start];
-    data[m4] = data[last];
+    final ${type} lpivot = data[d2];
+    final ${type} rpivot = data[d4];
+    data[d2] = data[start];
+    data[d4] = data[last];
 
     // A tie is when the two chosen pivots are the same
     final boolean tied = comp.compare(lpivot, rpivot) == 0;
@@ -229,81 +177,27 @@ public class ${Type}ArrayQuickSort {
     final int last = end - 1;
     if (len < threshold) {
       // Classic insertion sort.
-      for (int i = start + 1; i < end; i++) {
-        for (int j = i; j > start && data[j] < data[j - 1]; j--) {
-          final ${type} tmp = data[j - 1];
-          data[j - 1] = data[j];
-          data[j] = tmp;
-        }
-      }
+      insertionSortAscending(data, start, end);
       return;
     }
 
     // Choose pivots by looking at five candidates.
     final int seventh = (len >> 3) + (len >> 6) + 1;
-    final int m3 = start + (len >> 1); // middle
-    final int m2 = m3 - seventh;
-    final int m1 = m2 - seventh;
-    final int m4 = m3 + seventh;
-    final int m5 = m4 + seventh;
+    final int d3 = start + (len >> 1); // middle
+    final int d2 = d3 - seventh;
+    final int d1 = d2 - seventh;
+    final int d4 = d3 + seventh;
+    final int d5 = d4 + seventh;
 
     // Explicit (and optimal) sorting network for 5 elements
     // See Knuth for details.
-    if (data[m1] > data[m4]) {
-      final ${type} tmp = data[m4];
-      data[m4] = data[m1];
-      data[m1] = tmp;
-    }
-    //
-    if (data[m1] > data[m3]) {
-      final ${type} tmp = data[m3];
-      data[m3] = data[m1];
-      data[m1] = tmp;
-    }
-    if (data[m2] > data[m5]) {
-      final ${type} tmp = data[m5];
-      data[m5] = data[m2];
-      data[m2] = tmp;
-    }
-    //
-    if (data[m2] > data[m4]) {
-      final ${type} tmp = data[m4];
-      data[m4] = data[m2];
-      data[m2] = tmp;
-    }
-    if (data[m3] > data[m5]) {
-      final ${type} tmp = data[m5];
-      data[m5] = data[m3];
-      data[m3] = tmp;
-    }
-    //
-    if (data[m1] > data[m2]) {
-      final ${type} tmp = data[m2];
-      data[m2] = data[m1];
-      data[m1] = tmp;
-    }
-    if (data[m3] > data[m4]) {
-      final ${type} tmp = data[m4];
-      data[m4] = data[m3];
-      data[m3] = tmp;
-    }
-    //
-    if (data[m2] > data[m3]) {
-      final ${type} tmp = data[m3];
-      data[m3] = data[m2];
-      data[m2] = tmp;
-    }
-    if (data[m4] > data[m5]) {
-      final ${type} tmp = data[m5];
-      data[m5] = data[m4];
-      data[m4] = tmp;
-    }
+    sort5(data, d1, d2, d3, d4, d5);
 
     // Choose the 2 and 4th as pivots, as we want to get three parts
-    final ${type} lpivot = data[m2];
-    final ${type} rpivot = data[m4];
-    data[m2] = data[start];
-    data[m4] = data[last];
+    final ${type} lpivot = data[d2];
+    final ${type} rpivot = data[d4];
+    data[d2] = data[start];
+    data[d4] = data[last];
 
     // A tie is when the two chosen pivots are the same
     final boolean tied = lpivot == rpivot;
@@ -376,81 +270,26 @@ public class ${Type}ArrayQuickSort {
     final int last = end - 1;
     if (len < threshold) {
       // Classic insertion sort.
-      for (int i = start + 1; i < end; i++) {
-        for (int j = i; j > start && data[j] > data[j - 1]; j--) {
-          final ${type} tmp = data[j - 1];
-          data[j - 1] = data[j];
-          data[j] = tmp;
-        }
-      }
+      insertionSortDescending(data, start, end);
       return;
     }
 
     // Choose pivots by looking at five candidates.
     final int seventh = (len >> 3) + (len >> 6) + 1;
-    final int m3 = start + (len >> 1); // middle
-    final int m2 = m3 - seventh;
-    final int m1 = m2 - seventh;
-    final int m4 = m3 + seventh;
-    final int m5 = m4 + seventh;
+    final int d3 = start + (len >> 1); // middle
+    final int d2 = d3 - seventh;
+    final int d1 = d2 - seventh;
+    final int d4 = d3 + seventh;
+    final int d5 = d4 + seventh;
 
-    // Explicit (and optimal) sorting network for 5 elements
-    // See Knuth for details.
-    if (data[m1] < data[m4]) {
-      final ${type} tmp = data[m4];
-      data[m4] = data[m1];
-      data[m1] = tmp;
-    }
-    //
-    if (data[m1] < data[m3]) {
-      final ${type} tmp = data[m3];
-      data[m3] = data[m1];
-      data[m1] = tmp;
-    }
-    if (data[m2] < data[m5]) {
-      final ${type} tmp = data[m5];
-      data[m5] = data[m2];
-      data[m2] = tmp;
-    }
-    //
-    if (data[m2] < data[m4]) {
-      final ${type} tmp = data[m4];
-      data[m4] = data[m2];
-      data[m2] = tmp;
-    }
-    if (data[m3] < data[m5]) {
-      final ${type} tmp = data[m5];
-      data[m5] = data[m3];
-      data[m3] = tmp;
-    }
-    //
-    if (data[m1] < data[m2]) {
-      final ${type} tmp = data[m2];
-      data[m2] = data[m1];
-      data[m1] = tmp;
-    }
-    if (data[m3] < data[m4]) {
-      final ${type} tmp = data[m4];
-      data[m4] = data[m3];
-      data[m3] = tmp;
-    }
-    //
-    if (data[m2] < data[m3]) {
-      final ${type} tmp = data[m3];
-      data[m3] = data[m2];
-      data[m2] = tmp;
-    }
-    if (data[m4] < data[m5]) {
-      final ${type} tmp = data[m5];
-      data[m5] = data[m4];
-      data[m4] = tmp;
-    }
+    // Reverse sorting by using the positions in reverse!
+    sort5(data, d5, d4, d3, d2, d1);
 
     // Choose the 2 and 4th as pivots, as we want to get three parts
-    final ${type} lpivot = data[m2];
-    final ${type} rpivot = data[m4];
-    data[m2] = data[start];
-    data[m4] = data[last];
+    final ${type} lpivot = data[d2];
+    final ${type} rpivot = data[d4];
+    data[d2] = data[start];
+    data[d4] = data[last];
 
     // A tie is when the two chosen pivots are the same
     final boolean tied = lpivot == rpivot;
@@ -508,6 +347,302 @@ public class ${Type}ArrayQuickSort {
     }
     if (right + 3 < end) {
       descending(data, right + 2, end);
+    }
+  }
+  
+  /**
+   * Insertion sort, use for small arrays only!
+   * 
+   * @param data Data array
+   * @param start Starting position
+   * @param end End position (exclusive!)
+   * @param comp Comparator
+   */
+  public void insertionSort(${atype}[] data, final int start, final int end, ${Type}Comparator comp) {
+    for (int i = start, j = i++; i < end; j = i++) {
+      final ${atype} tmp = data[i];
+      while (comp.compare(tmp, data[j]) < 0) {
+        data[j + 1] = data[j];
+        if (j-- == start) {
+          break;
+        }
+      }
+      data[j + 1] = tmp;
+    }
+  }
+
+  /**
+   * Insertion sort, use for small arrays only!
+   * 
+   * @param data Data array
+   * @param start Starting position
+   * @param end End position (exclusive!)
+   * @param comp Comparator
+   */
+  public void dualInsertionSort(${atype}[] data, final int start, final int end, ${Type}Comparator comp) {
+    int i = start + 2;
+    for (; i < end; i += 2) {
+      ${atype} tmp1 = data[i - 1], tmp2 = data[i];
+      if (comp.compare(tmp2, tmp1) < 0) {
+        tmp1 = tmp2; tmp2 = data[i - 1];
+      }
+      int j = i - 2; 
+      for (; j >= start && comp.compare(tmp2, data[j]) < 0; j--) {
+        data[j + 2] = data[j];
+      }
+      data[j + 2] = tmp2;
+      for (; j >= start && comp.compare(tmp1, data[j]) < 0; j--) {
+        data[j + 1] = data[j];
+      }
+      data[j + 1] = tmp1;
+    }
+    if (i == end) {
+      final ${atype} tmp1 = data[i - 1];
+      int j = i - 2;
+      for (; j >= start && comp.compare(tmp1, data[j]) < 0; j--) {
+        data[j + 1] = data[j];
+      }
+      data[j + 1] = tmp1;
+    }
+  }
+
+  /**
+   * Insertion sort, use for small arrays only!
+   * 
+   * @param data Data array
+   * @param start Starting position
+   * @param end End position (exclusive!)
+   */
+  public void insertionSortAscending(${atype}[] data, final int start, final int end) {
+    for (int i = start, j = i++; i < end; j = i++) {
+      final ${atype} tmp = data[i];
+      while (tmp < data[j]) {
+        data[j + 1] = data[j];
+        if (j-- == start) {
+          break;
+        }
+      }
+      data[j + 1] = tmp;
+    }
+  }
+
+  /**
+   * Insertion sort, use for small arrays only!
+   * 
+   * @param data Data array
+   * @param start Starting position
+   * @param end End position (exclusive!)
+   */
+  public void dualInsertionSort(${atype}[] data, final int start, final int end) {
+    int i = start + 2;
+    for (; i < end; i += 2) {
+      ${atype} tmp1 = data[i - 1], tmp2 = data[i];
+      if (tmp2 < tmp1) {
+        tmp1 = tmp2; tmp2 = data[i - 1];
+      }
+      int j = i - 2; 
+      for (; j >= start && tmp2 < data[j]; j--) {
+        data[j + 2] = data[j];
+      }
+      data[j + 2] = tmp2;
+      for (; j >= start && tmp1 < data[j]; j--) {
+        data[j + 1] = data[j];
+      }
+      data[j + 1] = tmp1;
+    }
+    if (i == end) {
+      final ${atype} tmp1 = data[i - 1];
+      int j = i - 2;
+      for (; j >= start && tmp1 < data[j]; j--) {
+        data[j + 1] = data[j];
+      }
+      data[j + 1] = tmp1;
+    }
+  }
+
+  /**
+   * Insertion sort, use for small arrays only!
+   * 
+   * @param data Data array
+   * @param start Starting position
+   * @param end End position (exclusive!)
+   */
+  void insertionSortDescending(${atype}[] data, final int start, final int end) {
+    for (int i = start, j = i++; i < end; j = i++) {
+      final ${atype} tmp = data[i];
+      while (tmp > data[j]) {
+        data[j + 1] = data[j];
+        if (j-- == start) {
+          break;
+        }
+      }
+      data[j + 1] = tmp;
+    }
+  }
+
+  /**
+   * Five element explicit dual insertion sort, inserting 4 and 5 at the same time.
+   * 
+   * Note: for this to make sense, {@code d1 < d2 < d3 < d4 < d5} should hold!
+   * 
+   * This version avoids else cases with extra writes.
+   * 
+   * @param data Data array
+   * @param d1 Position of first
+   * @param d2 Position of second
+   * @param d3 Position of third
+   * @param d4 Position of fifth
+   * @param d5 Position of fourth
+   * @param comp Comparator
+   */
+  static void sort5(${atype}[] data, int d1, int d2, int d3, int d4, int d5, ${Type}Comparator comp) {
+    // Insert second
+    if (comp.compare(data[d1], data[d2]) > 0) {
+      final ${type} tmp = data[d2];
+      data[d2] = data[d1];
+      data[d1] = tmp;
+    }
+    // Insert third
+    if (comp.compare(data[d2], data[d3]) > 0) {
+      final ${type} tmp = data[d3];
+      data[d3] = data[d2];
+      data[d2] = tmp;
+      if (comp.compare(data[d1], tmp) > 0) {
+        data[d2] = data[d1];
+        data[d1] = tmp;
+      }
+    }
+    // Sort fourth and fifth.
+    if (comp.compare(data[d4], data[d5]) > 0) {
+      final ${type} tmp = data[d5];
+      data[d5] = data[d4];
+      data[d4] = tmp;
+    }
+    // Insert fifth and fourth.
+    final ${type} tmp5 = data[d5];
+    final ${type} tmp4 = data[d4];
+    if (comp.compare(data[d3], tmp5) > 0) {
+      data[d5] = data[d3];
+      if (comp.compare(data[d2], tmp5) > 0) {
+        data[d4] = data[d2];
+        if (comp.compare(data[d1], tmp5) > 0) {
+          data[d3] = data[d1];
+          data[d2] = tmp5;
+          data[d1] = tmp4;
+        } else {
+          data[d3] = tmp5;
+          data[d2] = tmp4;
+          if (comp.compare(data[d1], tmp4) > 0) {
+            data[d2] = data[d1];
+            data[d1] = tmp4;
+          }
+        }
+      } else {
+        data[d4] = tmp5;
+        data[d3] = tmp4;
+        if (comp.compare(data[d2], tmp4) > 0) {
+          data[d3] = data[d2];
+          data[d2] = tmp4;
+          if (comp.compare(data[d1], tmp4) > 0) {
+            data[d2] = data[d1];
+            data[d1] = tmp4;
+          }
+        }
+      }
+    } else if (comp.compare(data[d3], tmp4) > 0) {
+      data[d4] = data[d3];
+      data[d3] = tmp4;
+      if (comp.compare(data[d2], tmp4) > 0) {
+        data[d3] = data[d2];
+        data[d2] = tmp4;
+        if (comp.compare(data[d1], tmp4) > 0) {
+          data[d2] = data[d1];
+          data[d1] = tmp4;
+        }
+      }
+    }
+  }
+
+  
+  /**
+   * Five element explicit dual insertion sort, inserting 4 and 5 at the same time.
+   * 
+   * Note: for this to make sense, {@code d1 < d2 < d3 < d4 < d5} should hold!
+   * 
+   * This version avoids else cases with extra writes.
+   * 
+   * @param data Data array
+   * @param d1 Position of first
+   * @param d2 Position of second
+   * @param d3 Position of third
+   * @param d4 Position of fifth
+   * @param d5 Position of fourth
+   */
+  static void sort5(${atype}[] data, int d1, int d2, int d3, int d4, int d5) {
+    // Insert second
+    if (data[d1] > data[d2]) {
+      final ${type} tmp = data[d2];
+      data[d2] = data[d1];
+      data[d1] = tmp;
+    }
+    // Insert third
+    if (data[d2] > data[d3]) {
+      final ${type} tmp = data[d3];
+      data[d3] = data[d2];
+      data[d2] = tmp;
+      if (data[d1] > tmp) {
+        data[d2] = data[d1];
+        data[d1] = tmp;
+      }
+    }
+    // Sort fourth and fifth.
+    if (data[d4] > data[d5]) {
+      final ${type} tmp = data[d5];
+      data[d5] = data[d4];
+      data[d4] = tmp;
+    }
+    // Insert fifth and fourth.
+    final ${type} tmp5 = data[d5];
+    final ${type} tmp4 = data[d4];
+    if (data[d3] > tmp5) {
+      data[d5] = data[d3];
+      if (data[d2] > tmp5) {
+        data[d4] = data[d2];
+        if (data[d1] > tmp5) {
+          data[d3] = data[d1];
+          data[d2] = tmp5;
+          data[d1] = tmp4;
+        } else {
+          data[d3] = tmp5;
+          data[d2] = tmp4;
+          if (data[d1] > tmp4) {
+            data[d2] = data[d1];
+            data[d1] = tmp4;
+          }
+        }
+      } else {
+        data[d4] = tmp5;
+        data[d3] = tmp4;
+        if (data[d2] > tmp4) {
+          data[d3] = data[d2];
+          data[d2] = tmp4;
+          if (data[d1] > tmp4) {
+            data[d2] = data[d1];
+            data[d1] = tmp4;
+          }
+        }
+      }
+    } else if (data[d3] > tmp4) {
+      data[d4] = data[d3];
+      data[d3] = tmp4;
+      if (data[d2] > tmp4) {
+        data[d3] = data[d2];
+        data[d2] = tmp4;
+        if (data[d1] > tmp4) {
+          data[d2] = data[d1];
+          data[d1] = tmp4;
+        }
+      }
     }
   }
 }
