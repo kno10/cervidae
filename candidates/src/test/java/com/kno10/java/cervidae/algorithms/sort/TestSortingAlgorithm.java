@@ -1,6 +1,7 @@
 package com.kno10.java.cervidae.algorithms.sort;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Random;
 
@@ -49,8 +50,15 @@ public abstract class TestSortingAlgorithm {
   public static void testSorted(double[] data) {
     double current = data[0];
     for(int i = 1; i < data.length; i++) {
-      assertTrue("Array not sorted at position " + i + " " + current + " !<= " + data[i], current <= data[i]);
-      current = data[i];
+      if(current > data[i]) {
+        StringBuilder buf = new StringBuilder();
+        buf.append("Array not sorted at position ").append(i).append('\n');
+        buf.append(current).append(" !<= ").append(data[i]).append('\n');
+        for(int j = Math.max(0, i - 10); j < Math.min(data.length, i + 10); j++) {
+          buf.append(data[j]).append(' ');
+        }
+        fail(buf.toString());
+      }
     }
   }
 
