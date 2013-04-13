@@ -31,11 +31,13 @@ public class SortBenchmark extends Benchmark {
   BASE + "QuickSortBo5", //
   BASE + "QuickSortBo3", //
   BASE + "QuickSortTextbook",//
+  BASE + "HeapSortTextbook",//
   // We already know that these three are much slower.
   BASE + "BubbleSort", //
   BASE + "BubbleSortTextbook", //
   BASE + "BidirectionalBubbleSort", //
   BASE + "InsertionSort", //
+  // Reference combinations
   BASE + "SortBenchmark$JavaSort", //
   BASE + "SortBenchmark$OptimizedSort", //
   })
