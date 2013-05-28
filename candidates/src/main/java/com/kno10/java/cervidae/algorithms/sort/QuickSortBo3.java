@@ -46,8 +46,6 @@ public class QuickSortBo3 extends AbstractArraySortAlgorithm {
     this(INSERTION_THRESHOLD);
   }
 
-
-
   @Override
   public <T> void sort(ArraySortAdapter<? super T> adapter, T data, final int start, final int end) {
     final int len = end - start;
@@ -92,7 +90,7 @@ public class QuickSortBo3 extends AbstractArraySortAlgorithm {
     int i = start;
     int j = last - 1;
 
-    // This is the classic quicksort loop:
+    // This is the classic QuickSort loop:
     while(true) {
       while(i <= j && adapter.greaterThan(data, last, i)) {
         i++;

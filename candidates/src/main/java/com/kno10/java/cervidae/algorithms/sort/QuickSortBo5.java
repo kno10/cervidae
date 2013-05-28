@@ -72,7 +72,7 @@ public class QuickSortBo5 extends AbstractArraySortAlgorithm {
     int i = start;
     int j = last - 1;
 
-    // This is the classic quicksort loop:
+    // This is the classic QuickSort loop:
     while (true) {
       while (i <= j && adapter.greaterThan(data, last, i)) {
         i++;
