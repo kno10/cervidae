@@ -14,12 +14,6 @@ plan on the long run. The current version is structures highly modular, to split
 that serves just as a proof-of-concept (e.g. slower sorting algorithms) and code that
 is actually useful for certain users.
 
-For building, you need a recent Maven and you must install a recent
-[Google Caliper](https://code.google.com/p/caliper/) manually.
-Google Caliper 1.0 is not yet released, so we do not know whether the 1.0 release
-will be compatible.
-
-
 Design goals
 ============
 
