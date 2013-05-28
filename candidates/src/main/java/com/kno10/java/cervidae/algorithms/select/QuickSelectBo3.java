@@ -2,13 +2,12 @@ package com.kno10.java.cervidae.algorithms.select;
 
 import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
 import com.kno10.java.cervidae.algorithms.sort.InsertionSort;
-import com.kno10.java.cervidae.algorithms.sort.SortingNetworks;
 
 /**
  * QuickSelect computes ("selects") the element at a given rank and can be used
  * to compute Medians and arbitrary quantiles by computing the appropriate rank.
  * 
- * This implementation uses a best-of-5 heuristic to choose the pivot element.
+ * This implementation uses a best-of-3 heuristic to choose the pivot element.
  * 
  * This algorithm is essentially an incomplete QuickSort that only descends into
  * that part of the data that we are interested in, and also attributed to
@@ -16,7 +15,7 @@ import com.kno10.java.cervidae.algorithms.sort.SortingNetworks;
  * 
  * @author Erich Schubert
  */
-public class QuickSelectBo5 extends AbstractArraySelectionAlgorithm {
+public class QuickSelectBo3 extends AbstractArraySelectionAlgorithm {
   /**
    * For array parts smaller than this, switch to insertion sort.
    * 
@@ -32,14 +31,14 @@ public class QuickSelectBo5 extends AbstractArraySelectionAlgorithm {
   /**
    * Static instance of algorithm.
    */
-  public static final QuickSelectBo5 STATIC = new QuickSelectBo5(INSERTION_THRESHOLD);
+  public static final QuickSelectBo3 STATIC = new QuickSelectBo3(INSERTION_THRESHOLD);
 
   /**
    * Constructor with parameterizable threshold.
    * 
    * @param threshold Threshold to switch to insertion sort.
    */
-  public QuickSelectBo5(int threshold) {
+  public QuickSelectBo3(int threshold) {
     super();
     this.threshold = threshold;
   }
@@ -50,45 +49,51 @@ public class QuickSelectBo5 extends AbstractArraySelectionAlgorithm {
    * @deprecated For default options, use {@link #STATIC} instead.
    */
   @Deprecated
-  public QuickSelectBo5() {
+  public QuickSelectBo3() {
     this(INSERTION_THRESHOLD);
   }
 
-  /**
-   * Sort the array using the given comparator.
-   * 
-   * @param adapter Array data structure adapter
-   * @param data Data structure to sort
-   * @param start First index
-   * @param end Last index (exclusive)
-   * @param rank Rank to select
-   */
   @Override
   public <T> void select(ArraySortAdapter<? super T> adapter, T data, int start, int end, int rank) {
     while(true) {
-      // Optimization for small arrays,
+      // Optimization for small arrays
       // This also ensures a minimum size below
       if(start + threshold > end) {
         InsertionSort.STATIC.sort(adapter, data, start, end);
         return;
       }
 
-      // Best of 5 pivot picking:
-      // Choose pivots by looking at five candidates.
-      final int len = end - start;
-      final int seventh = (len >> 3) + (len >> 6) + 1;
-      final int m3 = (start + end) >> 1; // middle
-      final int m2 = m3 - seventh;
-      final int m1 = m2 - seventh;
-      final int m4 = m3 + seventh;
-      final int m5 = m4 + seventh;
-
-      SortingNetworks.sort5(adapter, data, m1, m2, m3, m4, m5);
-
-      final int best = bestPivot(rank, m1, m2, m3, m4, m5);
+      // Best of 3 pivot picking:
       final int last = end - 1;
-      // Move middle element (pivot) out of the way.
-      adapter.swap(data, best, last);
+      final int mid = (start + end) >> 1; // middle
+
+      // Ensure that the last element is the median:
+      if(adapter.greaterThan(data, start, mid)) {
+        if(adapter.greaterThan(data, start, last)) {
+          if(adapter.greaterThan(data, mid, last)) {
+            // start > mid > last:
+            adapter.swap(data, last, mid);
+          }
+          // else: start > last > mid
+        }
+        else {
+          // last > start > mid
+          adapter.swap(data, last, start);
+        }
+      }
+      else {
+        if(adapter.greaterThan(data, start, last)) {
+          // mid > start > last
+          adapter.swap(data, last, start);
+        }
+        else {
+          if(adapter.greaterThan(data, last, mid)) {
+            // last > mid > start
+            adapter.swap(data, last, mid);
+          }
+          // else: mid > last > start
+        }
+      }
 
       // Begin partitioning
       int i = start, j = end - 2;
@@ -121,32 +126,5 @@ public class QuickSelectBo5 extends AbstractArraySelectionAlgorithm {
         break;
       }
     } // Loop until rank==i
-  }
-
-  /**
-   * Choose the best pivot for the given rank.
-   * 
-   * @param rank Rank
-   * @param m1 Pivot candidate
-   * @param m2 Pivot candidate
-   * @param m3 Pivot candidate
-   * @param m4 Pivot candidate
-   * @param m5 Pivot candidate
-   * @return Best pivot candidate
-   */
-  private static final int bestPivot(int rank, int m1, int m2, int m3, int m4, int m5) {
-    if(rank < m1) {
-      return m1;
-    }
-    if(rank > m5) {
-      return m5;
-    }
-    if(rank < m2) {
-      return m2;
-    }
-    if(rank > m4) {
-      return m4;
-    }
-    return m3;
   }
 }
