@@ -9,6 +9,13 @@ package com.kno10.java.cervidae.adapter.arraylike;
  * @param <S> Array data type (often: Object)
  */
 public class ComparableArrayAdapter<T extends Comparable<? super T>, S> implements ArrayReadAdapter<S[], T>, ArrayWriteAdapter<S[], T>, ArraySortAdapter<S[]> {
+  /**
+   * Constructor.
+   */
+  public ComparableArrayAdapter() {
+    super();
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public T get(S[] data, int pos) {

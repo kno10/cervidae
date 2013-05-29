@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * 
  * @param <T> Data type
  */
-public class ComparableArrayListAdapter<T extends Comparable<? super T>> implements ArrayReadAdapter<ArrayList<T>, T>, ArrayWriteAdapter<ArrayList<T>, T>, ArraySortAdapter<ArrayList<T>> {
+public class ComparableArrayListAdapter<T extends Comparable<? super T>> implements ArrayReadAdapter<ArrayList<T>, T>, ArrayWriteAdapter<ArrayList<T>, T>, ArraySortAdapter<ArrayList<T>>, ArrayAllocationAdapter<ArrayList<T>> {
   @Override
   public T get(ArrayList<T> data, int pos) {
     return data.get(pos);
@@ -40,5 +40,16 @@ public class ComparableArrayListAdapter<T extends Comparable<? super T>> impleme
   @Override
   public boolean equals(ArrayList<T> data, int i, int j) {
     return data.get(i).compareTo(data.get(j)) == 0;
+  }
+
+  @Override
+  public ArrayList<T> newArray(int capacity) {
+    return new ArrayList<T>(capacity);
+  }
+
+  @Override
+  public ArrayList<T> ensureCapacity(ArrayList<T> existing, int capacity) {
+    existing.ensureCapacity(capacity);
+    return existing;
   }
 }

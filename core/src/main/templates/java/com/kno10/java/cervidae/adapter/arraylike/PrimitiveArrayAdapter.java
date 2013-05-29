@@ -1,12 +1,14 @@
 package com.kno10.java.cervidae.adapter.arraylike;
 
+import java.util.Arrays;
+
 /**
  * Class to control an {@code ${atype}[]} array.
  * 
  * @author Erich Schubert
  */
 // ${NOTE}
-public class ${Type}ArrayAdapter implements ArrayReadAdapter<${atype}[], ${Type}>, ArrayWriteAdapter<${atype}[], ${Type}>, ArraySortAdapter<${atype}[]> {
+public class ${Type}ArrayAdapter implements ArrayReadAdapter<${atype}[], ${Type}>, ArrayWriteAdapter<${atype}[], ${Type}>, ArraySortAdapter<${atype}[]>, ArrayAllocationAdapter<${atype}[]> {
 	/**
 	 * Adapter for ${type} arrays.
 	 */
@@ -52,4 +54,14 @@ public class ${Type}ArrayAdapter implements ArrayReadAdapter<${atype}[], ${Type}
 	public boolean equals(${atype}[] data, int i, int j) {
 		return data[i] == data[j];
 	}
+
+	@Override
+  public ${atype}[] newArray(int capacity) {
+    return new ${atype}[capacity];
+  }
+
+  @Override
+  public ${atype}[] ensureCapacity(${atype}[] existing, int capacity) {
+    return Arrays.copyOf(existing, capacity);
+  }
 }
