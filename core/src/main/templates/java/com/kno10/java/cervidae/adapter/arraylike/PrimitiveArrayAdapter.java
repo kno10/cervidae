@@ -8,7 +8,7 @@ import java.util.Arrays;
  * @author Erich Schubert
  */
 // ${NOTE}
-public class ${Type}ArrayAdapter implements ArrayReadAdapter<${atype}[], ${Type}>, ArrayWriteAdapter<${atype}[], ${Type}>, ArraySortAdapter<${atype}[]>, ArrayAllocationAdapter<${atype}[]> {
+public class ${Type}ArrayAdapter implements ArrayReadAdapter<${atype}[], ${Type}>, ArrayWriteAdapter<${atype}[], ${Type}>, ArraySortAdapter<${atype}[]> {
 	/**
 	 * Adapter for ${type} arrays.
 	 */
@@ -54,14 +54,4 @@ public class ${Type}ArrayAdapter implements ArrayReadAdapter<${atype}[], ${Type}
 	public boolean equals(${atype}[] data, int i, int j) {
 		return data[i] == data[j];
 	}
-
-	@Override
-  public ${atype}[] newArray(int capacity) {
-    return new ${atype}[capacity];
-  }
-
-  @Override
-  public ${atype}[] ensureCapacity(${atype}[] existing, int capacity) {
-    return Arrays.copyOf(existing, capacity);
-  }
 }
