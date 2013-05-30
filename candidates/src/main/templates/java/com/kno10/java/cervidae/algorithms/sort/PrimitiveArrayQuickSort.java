@@ -512,35 +512,52 @@ public class ${Type}ArrayQuickSort {
         data[d1] = tmp;
       }
     }
-    // Insert fourth
-    if (comp.compare(data[d3], data[d4]) > 0) {
-      final ${type} tmp = data[d4];
-      data[d4] = data[d3];
-      data[d3] = tmp;
-      if (comp.compare(data[d2], tmp) > 0) {
-        data[d3] = data[d2];
-        data[d2] = tmp;
-        if (comp.compare(data[d1], tmp) > 0) {
-          data[d2] = data[d1];
-          data[d1] = tmp;
-        }
-      }
-    }
-    // Insert fifth
+    // Sort fourth and fifth.
     if (comp.compare(data[d4], data[d5]) > 0) {
       final ${type} tmp = data[d5];
       data[d5] = data[d4];
       data[d4] = tmp;
-      if (comp.compare(data[d3], tmp) > 0) {
-        data[d4] = data[d3];
-        data[d3] = tmp;
-        if (comp.compare(data[d2], tmp) > 0) {
-          data[d3] = data[d2];
-          data[d2] = tmp;
-          if (comp.compare(data[d1], tmp) > 0) {
+    }
+    // Insert fifth and fourth.
+    final ${type} tmp5 = data[d5];
+    final ${type} tmp4 = data[d4];
+    if (comp.compare(data[d3], tmp5) > 0) {
+      data[d5] = data[d3];
+      if (comp.compare(data[d2], tmp5) > 0) {
+        data[d4] = data[d2];
+        if (comp.compare(data[d1], tmp5) > 0) {
+          data[d3] = data[d1];
+          data[d2] = tmp5;
+          data[d1] = tmp4;
+        } else {
+          data[d3] = tmp5;
+          data[d2] = tmp4;
+          if (comp.compare(data[d1], tmp4) > 0) {
             data[d2] = data[d1];
-            data[d1] = tmp;
+            data[d1] = tmp4;
           }
+        }
+      } else {
+        data[d4] = tmp5;
+        data[d3] = tmp4;
+        if (comp.compare(data[d2], tmp4) > 0) {
+          data[d3] = data[d2];
+          data[d2] = tmp4;
+          if (comp.compare(data[d1], tmp4) > 0) {
+            data[d2] = data[d1];
+            data[d1] = tmp4;
+          }
+        }
+      }
+    } else if (comp.compare(data[d3], tmp4) > 0) {
+      data[d4] = data[d3];
+      data[d3] = tmp4;
+      if (comp.compare(data[d2], tmp4) > 0) {
+        data[d3] = data[d2];
+        data[d2] = tmp4;
+        if (comp.compare(data[d1], tmp4) > 0) {
+          data[d2] = data[d1];
+          data[d1] = tmp4;
         }
       }
     }
@@ -578,35 +595,52 @@ public class ${Type}ArrayQuickSort {
         data[d1] = tmp;
       }
     }
-    // Insert fourth
-    if (data[d3] > data[d4]) {
-      final ${type} tmp = data[d4];
-      data[d4] = data[d3];
-      data[d3] = tmp;
-      if (data[d2] > tmp) {
-        data[d3] = data[d2];
-        data[d2] = tmp;
-        if (data[d1] > tmp) {
-          data[d2] = data[d1];
-          data[d1] = tmp;
-        }
-      }
-    }
-    // Insert fifth
+    // Sort fourth and fifth.
     if (data[d4] > data[d5]) {
       final ${type} tmp = data[d5];
       data[d5] = data[d4];
       data[d4] = tmp;
-      if (data[d3] > tmp) {
-        data[d4] = data[d3];
-        data[d3] = tmp;
-        if (data[d2] > tmp) {
-          data[d3] = data[d2];
-          data[d2] = tmp;
-          if (data[d1] > tmp) {
+    }
+    // Insert fifth and fourth.
+    final ${type} tmp5 = data[d5];
+    final ${type} tmp4 = data[d4];
+    if (data[d3] > tmp5) {
+      data[d5] = data[d3];
+      if (data[d2] > tmp5) {
+        data[d4] = data[d2];
+        if (data[d1] > tmp5) {
+          data[d3] = data[d1];
+          data[d2] = tmp5;
+          data[d1] = tmp4;
+        } else {
+          data[d3] = tmp5;
+          data[d2] = tmp4;
+          if (data[d1] > tmp4) {
             data[d2] = data[d1];
-            data[d1] = tmp;
+            data[d1] = tmp4;
           }
+        }
+      } else {
+        data[d4] = tmp5;
+        data[d3] = tmp4;
+        if (data[d2] > tmp4) {
+          data[d3] = data[d2];
+          data[d2] = tmp4;
+          if (data[d1] > tmp4) {
+            data[d2] = data[d1];
+            data[d1] = tmp4;
+          }
+        }
+      }
+    } else if (data[d3] > tmp4) {
+      data[d4] = data[d3];
+      data[d3] = tmp4;
+      if (data[d2] > tmp4) {
+        data[d3] = data[d2];
+        data[d2] = tmp4;
+        if (data[d1] > tmp4) {
+          data[d2] = data[d1];
+          data[d1] = tmp4;
         }
       }
     }
