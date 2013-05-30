@@ -63,7 +63,7 @@ public class SortBenchmark extends Benchmark {
       throw new RuntimeException("Exception loading algorithm: " + algname, e);
     }
     // @Param values are guaranteed to have been injected by now
-    array = SortBenchmarkUtil.generateRandomData(size, pattern, randomness, 0L);
+    array = SortBenchmarkUtil.generateRandomDoubleData(size, pattern, randomness, 0L);
   }
 
   @Macrobenchmark

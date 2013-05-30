@@ -44,11 +44,20 @@ public final class SortBenchmarkUtil {
     abstract public double val(int pos, int length);
   }
 
-  public static double[] generateRandomData(int size, MacroPattern pattern, double randomness, long seed) {
+  public static double[] generateRandomDoubleData(int size, MacroPattern pattern, double randomness, long seed) {
     double[] array = new double[size];
     Random rnd = new Random(seed);
-    for (int i = 0; i < size; i++) {
+    for(int i = 0; i < size; i++) {
       array[i] = rnd.nextDouble() * randomness + (1. - randomness) * pattern.val(i, size);
+    }
+    return array;
+  }
+
+  public static int[] generateRandomIntegerData(int size, MacroPattern pattern, double randomness, long seed) {
+    int[] array = new int[size];
+    Random rnd = new Random(seed);
+    for(int i = 0; i < size; i++) {
+      array[i] = (int) (Integer.MAX_VALUE * (rnd.nextDouble() * randomness + (1. - randomness) * pattern.val(i, size)));
     }
     return array;
   }

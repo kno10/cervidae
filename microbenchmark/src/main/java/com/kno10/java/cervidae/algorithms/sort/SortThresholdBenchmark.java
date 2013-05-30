@@ -55,7 +55,7 @@ public class SortThresholdBenchmark extends Benchmark {
       e.printStackTrace(System.err);
       throw new RuntimeException("Exception loading algorithm: " + algname, e);
     }
-    array = SortBenchmarkUtil.generateRandomData(size, pattern, randomness, 0L);
+    array = SortBenchmarkUtil.generateRandomDoubleData(size, pattern, randomness, 0L);
   }
 
   public double timeSortPrimitiveDoubles(int reps) {
