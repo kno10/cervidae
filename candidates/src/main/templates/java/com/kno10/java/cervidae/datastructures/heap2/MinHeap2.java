@@ -8,12 +8,14 @@ import com.kno10.java.cervidae.datastructures.${parent-Type}Heap;
 /**
  * Basic binary heap implementation.
  * 
+ * This code was automatically instantiated for the type: ${Type}
+ * 
  * @author Erich Schubert
  * ${generics-documentation}
  */
 public class ${Type}MinHeap2${def-generics} implements ${parent-Type}Heap${use-generics} {
   /**
-   * Base heap.
+   * Heap storage.
    */
   protected ${rawtype}[] twoheap;
 
@@ -44,7 +46,6 @@ public class ${Type}MinHeap2${def-generics} implements ${parent-Type}Heap${use-g
     super();
     ${extra-constructor-init}
     ${rawtype}[] twoheap = ${newarray,TWO_HEAP_INITIAL_SIZE};
-
     this.twoheap = twoheap;
     this.size = 0;
     this.modCount = 0;
@@ -103,13 +104,11 @@ public class ${Type}MinHeap2${def-generics} implements ${parent-Type}Heap${use-g
   ${unchecked}
   public void add(${api-type} o) {
     final ${rawtype} co = ${rawcast}o;
-    // System.err.println("Add: " + o);
     if (size >= twoheap.length) {
       // Grow by one layer.
       twoheap = Arrays.copyOf(twoheap, twoheap.length + twoheap.length + 1);
     }
     final int twopos = size;
-    twoheap[twopos] = co;
     ++size;
     heapifyUp2(twopos, co);
     ++modCount;

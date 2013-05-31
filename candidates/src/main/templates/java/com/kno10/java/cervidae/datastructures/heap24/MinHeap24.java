@@ -174,7 +174,7 @@ public class ${Type}MinHeap24${def-generics} implements ${parent-Type}Heap${use-
         fourheap = ${newarray,FOUR_HEAP_INITIAL_SIZE};
       } else if (fourpos >= fourheap.length) {
         // Grow extension heap by half.
-        fourheap = Arrays.copyOf(fourheap, fourheap.length + (fourheap.length >> 1));
+        fourheap = Arrays.copyOf(fourheap, fourheap.length + (fourheap.length >>> 1));
       }
       fourheap[fourpos] = co;
       ++size;
@@ -228,7 +228,7 @@ public class ${Type}MinHeap24${def-generics} implements ${parent-Type}Heap${use-
    */
   private void heapifyUp4(int fourpos, ${rawtype} cur) {
     while (fourpos > 0) {
-      final int parent = (fourpos - 1) >> 2;
+      final int parent = (fourpos - 1) >>> 2;
       ${rawtype} par = fourheap[parent];
       if (${compare,>=,cur,par}) {
         break;

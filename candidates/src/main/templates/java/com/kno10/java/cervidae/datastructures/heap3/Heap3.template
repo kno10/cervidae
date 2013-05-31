@@ -1,0 +1,172 @@
+<template>
+  <input id="int">MinHeap3.java</input>
+  <output id="int">${Type}MinHeap3.java</output>
+  <input id="long">MaxHeap3.java</input>
+  <output id="long">${Type}MaxHeap3.java</output>
+  <group>
+    <pattern>\$\{NOTE\}</pattern>
+    <substitute>Note: This code is automatically generated. DO NOT MODIFY.</substitute>
+  </group>
+  <group link="key">
+    <!-- uppercase type, used in class names -->
+    <pattern>\$\{Type\}</pattern>
+    <substitute id="double">Double</substitute>
+    <substitute id="int">Integer</substitute>
+    <substitute id="long">Long</substitute>
+    <substitute id="short">Short</substitute>
+    <substitute id="float">Float</substitute>
+    <substitute id="byte">Byte</substitute>
+    <substitute id="char">Character</substitute>
+    <substitute id="comparable">Comparable</substitute>
+    <substitute id="comparator">Comparator</substitute>
+  </group>
+  <group link="key">
+    <!-- uppercase type of parent classes (Object for Comparable!) -->
+    <!-- TODO: remove! -->
+    <pattern>\$\{parent-Type\}</pattern>
+    <substitute id="double">Double</substitute>
+    <substitute id="int">Integer</substitute>
+    <substitute id="long">Long</substitute>
+    <substitute id="short">Short</substitute>
+    <substitute id="float">Float</substitute>
+    <substitute id="byte">Byte</substitute>
+    <substitute id="char">Character</substitute>
+    <substitute id="comparable">Object</substitute>
+    <substitute id="comparator">Object</substitute>
+  </group>
+  <group link="key">
+    <!-- API type - in method signatures -->
+    <pattern>\$\{api-type\}</pattern>
+    <substitute id="double">double</substitute>
+    <substitute id="int">int</substitute>
+    <substitute id="long">long</substitute>
+    <substitute id="short">short</substitute>
+    <substitute id="float">float</substitute>
+    <substitute id="byte">byte</substitute>
+    <substitute id="char">char</substitute>
+    <substitute id="comparable">K</substitute>
+    <substitute id="comparator">K</substitute>
+  </group>
+  <group link="key">
+    <!-- raw data type - variables -->
+    <pattern>\$\{rawtype\}</pattern>
+    <substitute id="double">double</substitute>
+    <substitute id="int">int</substitute>
+    <substitute id="long">long</substitute>
+    <substitute id="short">short</substitute>
+    <substitute id="float">float</substitute>
+    <substitute id="byte">byte</substitute>
+    <substitute id="char">char</substitute>
+    <substitute id="comparable">Comparable&lt;Object&gt;</substitute>
+    <substitute id="comparator">Object</substitute>
+  </group>
+  <group link="key">
+    <!-- cast to raw data type -->
+    <pattern>\$\{rawcast\}</pattern>
+    <substitute></substitute>
+    <substitute id="comparable">(Comparable&lt;Object&gt;)</substitute>
+    <substitute id="comparator">(Object)</substitute>
+  </group>
+  <group link="key">
+    <!-- cast to API data type -->
+    <pattern>\$\{api-cast\}</pattern>
+    <substitute></substitute>
+    <substitute id="comparable">(K)</substitute>
+    <substitute id="comparator">(K)</substitute>
+  </group>
+  <group link="key">
+    <!-- Generics in class definition -->
+    <pattern>\$\{def-generics\}</pattern>
+    <substitute></substitute>
+    <substitute id="comparable">&lt;K extends Comparable&lt;? super K&gt;&gt;</substitute>
+    <substitute id="comparator">&lt;K&gt;</substitute>
+  </group>
+  <group link="key">
+    <!-- Generics when used e.g. with "implements" -->
+    <pattern>\$\{use-generics\}</pattern>
+    <substitute></substitute>
+    <substitute id="comparable">&lt;K&gt;</substitute>
+    <substitute id="comparator">&lt;K&gt;</substitute>
+  </group>
+  <group link="key">
+    <!-- Command to create a new array -->
+    <pattern>\$\{newarray,([^}]+)\}</pattern>
+    <substitute id="double">new double[$1]</substitute>
+    <substitute id="int">new int[$1]</substitute>
+    <substitute id="long">new long[$1]</substitute>
+    <substitute id="short">new short[$1]</substitute>
+    <substitute id="float">new float[$1]</substitute>
+    <substitute id="byte">new byte[$1]</substitute>
+    <substitute id="char">new char[$1]</substitute>
+    <substitute id="comparable">(Comparable&lt;Object&gt;[]) java.lang.reflect.Array.newInstance(Comparable.class, $1)</substitute>
+    <substitute id="comparator">new Object[$1]</substitute>
+  </group>
+  <group link="key">
+    <!-- "null" value (undef) -->
+    <pattern>\$\{null\}</pattern>
+    <substitute id="double">0.</substitute>
+    <substitute id="int">0</substitute>
+    <substitute id="long">0L</substitute>
+    <substitute id="short">(short)0</substitute>
+    <substitute id="float">0.f</substitute>
+    <substitute id="byte">(byte)0</substitute>
+    <substitute id="char">'\\0'</substitute>
+    <substitute id="comparable">null</substitute>
+    <substitute id="comparator">null</substitute>
+  </group>
+  <group link="key">
+    <!-- Unchecked cast -->
+    <pattern>(?m)^(\s*)\$\{unchecked\}\s*</pattern>
+    <substitute>$1</substitute>
+    <substitute id="comparable">$1@SuppressWarnings("unchecked")<!-- newline -->
+<!-- newline -->$1</substitute>
+    <substitute id="comparator">$1@SuppressWarnings("unchecked")<!-- newline -->
+<!-- newline -->$1</substitute>
+  </group>
+  <group link="key">
+    <!-- Unchecked cast -->
+    <pattern>(\n *\* *)+\$\{generics-documentation\} *</pattern>
+    <substitute></substitute>
+    <substitute id="comparable">$1@param &lt;K&gt; Key type</substitute>
+    <substitute id="comparator">$1@param &lt;K&gt; Key type</substitute>
+  </group>
+  <group link="key">
+    <!-- Additional fields of the class. -->
+    <pattern>(\s*)\$\{extra-fields\}\s*</pattern>
+    <substitute></substitute>
+    <substitute id="comparator">
+$1/** 
+$1 * Comparator
+$1 */
+$1protected java.util.Comparator&lt;Object&gt; comparator;
+</substitute>
+  </group>
+  <group link="key">
+    <!-- Additional arguments to the constructor. -->
+    <pattern>\s*(,\s*)?\$\{extra-constructor\}\s*</pattern>
+    <substitute></substitute>
+    <substitute id="comparator">$1java.util.Comparator&lt;? super K&gt; comparator</substitute>
+  </group>
+  <group link="key">
+    <!-- Additional initialization for the comparator -->
+    <pattern>\s*(,\s*)?\$\{extra-constructor-init\}\s*</pattern>
+    <substitute>$1</substitute>
+    <substitute id="comparator">
+  $1this.comparator = (java.util.Comparator&lt;Object&gt;) java.util.Comparator.class.cast(comparator);
+  </substitute>
+  </group>
+  <group link="key">
+    <!-- Additional documentation -->
+    <pattern>(\n *\* *)+\$\{extra-constructor-documentation\} *</pattern>
+    <substitute></substitute>
+    <substitute id="comparator">$1@param comparator Comparator<!-- newline -->
+    </substitute>
+  </group>
+  <group link="key">
+    <!-- Comparison operator -->
+    <pattern>\$\{compare,([&lt;&gt;=]+),\s*([^}]+),\s*([^}]+)\}</pattern>
+    <substitute>$2 $1 $3</substitute>
+    <substitute id="comparable">$2.compareTo($3) $1 0</substitute>
+    <substitute id="comparator">comparator.compare($2, $3) $1 0</substitute>
+  </group>
+</template>

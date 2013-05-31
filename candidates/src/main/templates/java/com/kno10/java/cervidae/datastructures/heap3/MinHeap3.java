@@ -1,4 +1,4 @@
-package com.kno10.java.cervidae.datastructures.heap2;
+package com.kno10.java.cervidae.datastructures.heap3;
 
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
@@ -6,18 +6,18 @@ import java.util.ConcurrentModificationException;
 import com.kno10.java.cervidae.datastructures.${parent-Type}Heap;
 
 /**
- * Basic binary heap implementation.
+ * Priority queue, based on a 3-ary heap.
  * 
  * This code was automatically instantiated for the type: ${Type}
  * 
  * @author Erich Schubert
  * ${generics-documentation}
  */
-public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-generics} {
+public class ${Type}MinHeap3${def-generics} implements ${parent-Type}Heap${use-generics} {
   /**
    * Heap storage.
    */
-  protected ${rawtype}[] twoheap;
+  protected ${rawtype}[] heap;
 
   /**
    * Current size of heap.
@@ -30,9 +30,17 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   protected int modCount = 0;
 
   /**
-   * Initial size of the 2-ary heap.
+   * Initial size of 3-ary heap when initialized.
+   * 
+   * 13 = 3-ary heap of height 2: 1 + 3 + 3*3
+   * 
+   * 40 = 3-ary heap of height 3: 13 + 3*3*3
+   * 
+   * 221 = 3-ary heap of height 4: 40 + 3*3*3*3
+   * 
+   * Without further hints, start with 40 elements
    */
-  private final static int TWO_HEAP_INITIAL_SIZE = (1 << 5) - 1;
+  private final static int THREE_HEAP_INITIAL_SIZE = 40;
 
   ${extra-fields}
 
@@ -42,11 +50,11 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
    * ${extra-constructor-documentation}
    */
   ${unchecked}
-  public ${Type}MaxHeap2(${extra-constructor}) {
+  public ${Type}MinHeap3(${extra-constructor}) {
     super();
     ${extra-constructor-init}
-    ${rawtype}[] twoheap = ${newarray,TWO_HEAP_INITIAL_SIZE};
-    this.twoheap = twoheap;
+    ${rawtype}[] heap = ${newarray,THREE_HEAP_INITIAL_SIZE};
+    this.heap = heap;
     this.size = 0;
     this.modCount = 0;
   }
@@ -58,36 +66,41 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
    * ${extra-constructor-documentation}
    */
   ${unchecked}
-  public ${Type}MaxHeap2(int minsize, ${extra-constructor}) {
+  public ${Type}MinHeap3(int minsize, ${extra-constructor}) {
     super();
     ${extra-constructor-init}
-    final int size = goodHeapSize(minsize);
-    ${rawtype}[] twoheap = ${newarray,size};
-    this.twoheap = twoheap;
+    // TODO: upscale to the next "optimal" size?
+    ${rawtype}[] heap = ${newarray,size};
+    this.heap = heap;
     this.size = 0;
     this.modCount = 0;
   }
 
   /**
-   * Find the next power of 2 - 1 heap size.
+   * Fast integer division by 3 operator. INCORRECT for negative values!
    * 
-   * @param x original integer
-   * @return Next power of 2 - 1
+   * @param v Input value
+   * @return v / 3, rounded down.
    */
-  private static int goodHeapSize(int x) {
-    x |= x >>> 1;
-    x |= x >>> 2;
-    x |= x >>> 4;
-    x |= x >>> 8;
-    x |= x >>> 16;
-    return x;
+  public static final int fastDiv3(int v) {
+    return (int) ((v * 0xAAAAAAABL) >>> 33);
+  }
+
+  /**
+   * Fast multiplicaton with 3 operator.
+   * 
+   * @param v Input value
+   * @return v * 3
+   */
+  public static final int fastTimes3(int v) {
+    return (v << 1) + v;
   }
 
   @Override
   public void clear() {
     size = 0;
     ++modCount;
-    Arrays.fill(twoheap, ${null});
+    Arrays.fill(heap, ${null});
   }
 
   @Override
@@ -104,13 +117,13 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   ${unchecked}
   public void add(${api-type} o) {
     final ${rawtype} co = ${rawcast}o;
-    if (size >= twoheap.length) {
-      // Grow by one layer.
-      twoheap = Arrays.copyOf(twoheap, twoheap.length + twoheap.length + 1);
+    if (size >= heap.length) {
+      // Grow by 50%
+      heap = Arrays.copyOf(heap, heap.length + (heap.length >>> 1));
     }
-    final int twopos = size;
+    final int pos = size;
     ++size;
-    heapifyUp2(twopos, co);
+    heapifyUp3(pos, co);
     ++modCount;
   }
 
@@ -118,7 +131,7 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   public void add(${api-type} key, int max) {
     if (size < max) {
       add(key);
-    } else if (${compare,>=,twoheap[0],key}) {
+    } else if (${compare,<=,heap[0],key}) {
       replaceTopElement(key);
     }
   }
@@ -126,83 +139,94 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   @Override
   ${unchecked}
   public ${api-type} replaceTopElement(${api-type} reinsert) {
-    final ${rawtype} ret = twoheap[0];
-    heapifyDown2(0, ${rawcast} reinsert);
+    final ${rawtype} ret = heap[0];
+    heapifyDown3(0, ${rawcast} reinsert);
     ++modCount;
     return ${api-cast}ret;
   }
 
   /**
-   * Heapify-Up method for 2-ary heap.
+   * Heapify-Up method for 3-ary heap.
    * 
-   * @param twopos Position in 2-ary heap.
+   * @param pos Position in 3-ary heap.
    * @param cur Current object
    */
-  private void heapifyUp2(int twopos, ${rawtype} cur) {
-    while (twopos > 0) {
-      final int parent = (twopos - 1) >>> 1;
-      ${rawtype} par = twoheap[parent];
-      if (${compare,<=,cur,par}) {
+  private void heapifyUp3(int pos, ${rawtype} cur) {
+    while (pos > 0) {
+      final int parent = fastDiv3(pos - 1);
+      ${rawtype} par = heap[parent];
+      if (${compare,>=,cur,par}) {
         break;
       }
-      twoheap[twopos] = par;
-      twopos = parent;
+      heap[pos] = par;
+      pos = parent;
     }
-    twoheap[twopos] = cur;
+    heap[pos] = cur;
   }
 
   @Override
   ${unchecked}
   public ${api-type} poll() {
-    final ${rawtype} ret = twoheap[0];
+    final ${rawtype} ret = heap[0];
     --size;
     // Replacement object:
     if (size > 0) {
-      final ${rawtype} reinsert = twoheap[size];
-      twoheap[size] = ${null};
-      heapifyDown2(0, reinsert);
+      final ${rawtype} reinsert = heap[size];
+      heap[size] = ${null};
+      heapifyDown3(0, reinsert);
     } else {
-      twoheap[0] = ${null};
+      heap[0] = ${null};
     }
     ++modCount;
     return ${api-cast}ret;
   }
 
   /**
-   * Heapify-Down for 2-ary heap.
+   * Heapify-Down for 3-ary heap.
    * 
-   * @param twopos Position in 2-ary heap.
+   * @param pos Position in 3-ary heap.
    * @param cur Current object
    */
-  private void heapifyDown2(int twopos, ${rawtype} cur) {
-    final int stop = size >>> 1;
-    while (twopos < stop) {
-      int bestchild = (twopos << 1) + 1;
-      ${rawtype} best = twoheap[bestchild];
-      final int right = bestchild + 1;
-      if (right < size && ${compare,<,best,twoheap[right]}) {
-        bestchild = right;
-        best = twoheap[right];
+  private void heapifyDown3(int pos, ${rawtype} cur) {
+    final int stop = fastDiv3(size + 1);
+    while (pos < stop) {
+      final int child = fastTimes3(pos) + 1;
+      ${rawtype} best = heap[child];
+      int bestchild = child, candidate = child + 1;
+      if (size > candidate) {
+        ${rawtype} nextchild = heap[candidate];
+        if (${compare,>,best,nextchild}) {
+          bestchild = candidate;
+          best = nextchild;
+        }
+
+        if (size >= candidate + 2) {
+          nextchild = heap[++candidate];
+          if (${compare,>,best,nextchild}) {
+            bestchild = candidate;
+            best = nextchild;
+          }
+        }
       }
-      if (${compare,>=,cur,best}) {
+      if (${compare,<=,cur,best}) {
         break;
       }
-      twoheap[twopos] = best;
-      twopos = bestchild;
+      heap[pos] = best;
+      pos = bestchild;
     }
-    twoheap[twopos] = cur;
+    heap[pos] = cur;
   }
 
   @Override
   ${unchecked}
   public ${api-type} peek() {
-    return ${api-cast}twoheap[0];
+    return ${api-cast}heap[0];
   }
 
   @Override
   public String toString() {
     StringBuilder buf = new StringBuilder();
-    buf.append(${Type}MaxHeap2.class.getSimpleName()).append(" [");
+    buf.append(${Type}MinHeap3.class.getSimpleName()).append(" [");
     for (UnsortedIter iter = new UnsortedIter(); iter.valid(); iter.advance()) {
       buf.append(iter.get()).append(',');
     }
@@ -257,7 +281,7 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
     ${unchecked}
     @Override
     public ${api-type} get() {
-      return ${api-cast}(twoheap[pos]);
+      return ${api-cast}(heap[pos]);
     }
   }
 }
