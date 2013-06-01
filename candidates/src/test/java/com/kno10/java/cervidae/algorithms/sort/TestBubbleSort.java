@@ -10,6 +10,6 @@ import org.junit.Test;
 public class TestBubbleSort extends TestSortingAlgorithm {
   @Test
   public void testSort() {
-    testSortingAlgorithm(BubbleSort.STATIC, 10000, 0L);
+    testSortingAlgorithm(BubbleSort.STATIC, 1000, 0L);
   }
 }
