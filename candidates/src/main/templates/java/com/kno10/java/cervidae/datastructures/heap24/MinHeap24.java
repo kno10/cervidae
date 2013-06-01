@@ -164,7 +164,6 @@ public class ${Type}MinHeap24${def-generics} implements ${parent-Type}Heap${use-
         twoheap = Arrays.copyOf(twoheap, twoheap.length + twoheap.length + 1);
       }
       final int twopos = size;
-      twoheap[twopos] = co;
       ++size;
       heapifyUp2(twopos, co);
       ++modCount;
@@ -176,7 +175,6 @@ public class ${Type}MinHeap24${def-generics} implements ${parent-Type}Heap${use-
         // Grow extension heap by half.
         fourheap = Arrays.copyOf(fourheap, fourheap.length + (fourheap.length >>> 1));
       }
-      fourheap[fourpos] = co;
       ++size;
       heapifyUp4(fourpos, co);
       ++modCount;
@@ -323,30 +321,17 @@ public class ${Type}MinHeap24${def-generics} implements ${parent-Type}Heap${use-
     while (fourpos < stop) {
       final int child = (fourpos << 2) + 1;
       ${rawtype} best = fourheap[child];
-      int bestchild = child, candidate = child + 1, minsize = candidate + TWO_HEAP_MAX_SIZE;
-      if (size > minsize) {
+      int bestchild = child, candidate = child + 1;
+      for (int i = 0; i < 3; i++) {
+        if (size <= candidate + TWO_HEAP_MAX_SIZE) {
+          break;
+        }
         ${rawtype} nextchild = fourheap[candidate];
         if (${compare,>,best,nextchild}) {
           bestchild = candidate;
           best = nextchild;
         }
-
-        minsize += 2;
-        if (size >= minsize) {
-          nextchild = fourheap[++candidate];
-          if (${compare,>,best,nextchild}) {
-            bestchild = candidate;
-            best = nextchild;
-          }
-
-          if (size > minsize) {
-            nextchild = fourheap[++candidate];
-            if (${compare,>,best,nextchild}) {
-              bestchild = candidate;
-              best = nextchild;
-            }
-          }
-        }
+        candidate++;
       }
       if (${compare,<=,cur,best}) {
         break;
@@ -377,6 +362,36 @@ public class ${Type}MinHeap24${def-generics} implements ${parent-Type}Heap${use-
   @Override
   public UnsortedIter unsortedIter() {
     return new UnsortedIter();
+  }
+
+  /**
+   * Validate the heap.
+   * 
+   * @return {@code null} when there were no errors, an error message otherwise.
+   */
+  protected String checkHeap() {
+    {
+      final int end = Math.min(size, TWO_HEAP_MAX_SIZE);
+      for (int i = 1; i < end; i++) {
+        final int parent = (i - 1) >>> 1;
+        if (${compare,>,twoheap[parent],twoheap[i]}) {
+          return "@" + parent + ": " + twoheap[parent] + " > @" + i + ": " + twoheap[i];
+        }
+      }
+    }
+    if (size > TWO_HEAP_MAX_SIZE) {
+      if (${compare,>,twoheap[0],fourheap[0]}) {
+        return "@2:" + 0 + ": " + twoheap[0] + " > @4:" + 0 + ": " + fourheap[0];
+      }
+      final int end = size - TWO_HEAP_MAX_SIZE;
+      for (int i = 1; i < end; i++) {
+        final int parent = (i - 1) >>> 2;
+        if (${compare,>,fourheap[parent],fourheap[i]}) {
+          return "@4:" + parent + ": " + fourheap[parent] + " > @4:" + i + ": " + fourheap[i];
+        }
+      }
+    }
+    return null;
   }
 
   /**

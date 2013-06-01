@@ -230,6 +230,21 @@ public class ${Type}MinHeap5${def-generics} implements ${parent-Type}Heap${use-g
     return buf.toString();
   }
 
+  /**
+   * Validate the heap.
+   * 
+   * @return {@code null} when there were no errors, an error message otherwise.
+   */
+  protected String checkHeap() {
+    for (int i = 1; i < size; i++) {
+      final int parent = fastDiv5(i - 1);
+      if (${compare,>,heap[parent],heap[i]}) {
+        return "@" + parent + ": " + heap[parent] + " > @" + i + ": " + heap[i];
+      }
+    }
+    return null;
+  }
+
   @Override
   public UnsortedIter unsortedIter() {
     return new UnsortedIter();

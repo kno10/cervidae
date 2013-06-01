@@ -17,7 +17,7 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   /**
    * Heap storage.
    */
-  protected ${rawtype}[] twoheap;
+  protected ${rawtype}[] heap;
 
   /**
    * Current size of heap.
@@ -45,8 +45,8 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   public ${Type}MaxHeap2(${extra-constructor}) {
     super();
     ${extra-constructor-init}
-    ${rawtype}[] twoheap = ${newarray,TWO_HEAP_INITIAL_SIZE};
-    this.twoheap = twoheap;
+    ${rawtype}[] heap = ${newarray,TWO_HEAP_INITIAL_SIZE};
+    this.heap = heap;
     this.size = 0;
     this.modCount = 0;
   }
@@ -62,8 +62,8 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
     super();
     ${extra-constructor-init}
     final int size = goodHeapSize(minsize);
-    ${rawtype}[] twoheap = ${newarray,size};
-    this.twoheap = twoheap;
+    ${rawtype}[] heap = ${newarray,size};
+    this.heap = heap;
     this.size = 0;
     this.modCount = 0;
   }
@@ -87,7 +87,7 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   public void clear() {
     size = 0;
     ++modCount;
-    Arrays.fill(twoheap, ${null});
+    Arrays.fill(heap, ${null});
   }
 
   @Override
@@ -104,13 +104,13 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   ${unchecked}
   public void add(${api-type} o) {
     final ${rawtype} co = ${rawcast}o;
-    if (size >= twoheap.length) {
+    if (size >= heap.length) {
       // Grow by one layer.
-      twoheap = Arrays.copyOf(twoheap, twoheap.length + twoheap.length + 1);
+      heap = Arrays.copyOf(heap, heap.length + heap.length + 1);
     }
-    final int twopos = size;
+    final int pos = size;
     ++size;
-    heapifyUp2(twopos, co);
+    heapifyUp2(pos, co);
     ++modCount;
   }
 
@@ -118,7 +118,7 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   public void add(${api-type} key, int max) {
     if (size < max) {
       add(key);
-    } else if (${compare,>=,twoheap[0],key}) {
+    } else if (${compare,>=,heap[0],key}) {
       replaceTopElement(key);
     }
   }
@@ -126,7 +126,7 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   @Override
   ${unchecked}
   public ${api-type} replaceTopElement(${api-type} reinsert) {
-    final ${rawtype} ret = twoheap[0];
+    final ${rawtype} ret = heap[0];
     heapifyDown2(0, ${rawcast} reinsert);
     ++modCount;
     return ${api-cast}ret;
@@ -135,34 +135,34 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   /**
    * Heapify-Up method for 2-ary heap.
    * 
-   * @param twopos Position in 2-ary heap.
+   * @param pos Position in 2-ary heap.
    * @param cur Current object
    */
-  private void heapifyUp2(int twopos, ${rawtype} cur) {
-    while (twopos > 0) {
-      final int parent = (twopos - 1) >>> 1;
-      ${rawtype} par = twoheap[parent];
+  private void heapifyUp2(int pos, ${rawtype} cur) {
+    while (pos > 0) {
+      final int parent = (pos - 1) >>> 1;
+      ${rawtype} par = heap[parent];
       if (${compare,<=,cur,par}) {
         break;
       }
-      twoheap[twopos] = par;
-      twopos = parent;
+      heap[pos] = par;
+      pos = parent;
     }
-    twoheap[twopos] = cur;
+    heap[pos] = cur;
   }
 
   @Override
   ${unchecked}
   public ${api-type} poll() {
-    final ${rawtype} ret = twoheap[0];
+    final ${rawtype} ret = heap[0];
     --size;
     // Replacement object:
     if (size > 0) {
-      final ${rawtype} reinsert = twoheap[size];
-      twoheap[size] = ${null};
+      final ${rawtype} reinsert = heap[size];
+      heap[size] = ${null};
       heapifyDown2(0, reinsert);
     } else {
-      twoheap[0] = ${null};
+      heap[0] = ${null};
     }
     ++modCount;
     return ${api-cast}ret;
@@ -171,32 +171,32 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   /**
    * Heapify-Down for 2-ary heap.
    * 
-   * @param twopos Position in 2-ary heap.
+   * @param pos Position in 2-ary heap.
    * @param cur Current object
    */
-  private void heapifyDown2(int twopos, ${rawtype} cur) {
+  private void heapifyDown2(int pos, ${rawtype} cur) {
     final int stop = size >>> 1;
-    while (twopos < stop) {
-      int bestchild = (twopos << 1) + 1;
-      ${rawtype} best = twoheap[bestchild];
+    while (pos < stop) {
+      int bestchild = (pos << 1) + 1;
+      ${rawtype} best = heap[bestchild];
       final int right = bestchild + 1;
-      if (right < size && ${compare,<,best,twoheap[right]}) {
+      if (right < size && ${compare,<,best,heap[right]}) {
         bestchild = right;
-        best = twoheap[right];
+        best = heap[right];
       }
       if (${compare,>=,cur,best}) {
         break;
       }
-      twoheap[twopos] = best;
-      twopos = bestchild;
+      heap[pos] = best;
+      pos = bestchild;
     }
-    twoheap[twopos] = cur;
+    heap[pos] = cur;
   }
 
   @Override
   ${unchecked}
   public ${api-type} peek() {
-    return ${api-cast}twoheap[0];
+    return ${api-cast}heap[0];
   }
 
   @Override
@@ -213,6 +213,21 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
   @Override
   public UnsortedIter unsortedIter() {
     return new UnsortedIter();
+  }
+
+  /**
+   * Validate the heap.
+   * 
+   * @return {@code null} when there were no errors, an error message otherwise.
+   */
+  protected String checkHeap() {
+    for (int i = 1; i < size; i++) {
+      final int parent = (i - 1) >>> 1;
+      if (${compare,<,heap[parent],heap[i]}) {
+        return "@" + parent + ": " + heap[parent] + " < @" + i + ": " + heap[i];
+      }
+    }
+    return null;
   }
 
   /**
@@ -257,7 +272,7 @@ public class ${Type}MaxHeap2${def-generics} implements ${parent-Type}Heap${use-g
     ${unchecked}
     @Override
     public ${api-type} get() {
-      return ${api-cast}(twoheap[pos]);
+      return ${api-cast}(heap[pos]);
     }
   }
 }

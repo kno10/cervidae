@@ -229,6 +229,21 @@ public class ${Type}MaxHeap4${def-generics} implements ${parent-Type}Heap${use-g
   }
 
   /**
+   * Validate the heap.
+   * 
+   * @return {@code null} when there were no errors, an error message otherwise.
+   */
+  protected String checkHeap() {
+    for (int i = 1; i < size; i++) {
+      final int parent = (i - 1) >>> 2;
+      if (${compare,<,heap[parent],heap[i]}) {
+        return "@" + parent + ": " + heap[parent] + " < @" + i + ": " + heap[i];
+      }
+    }
+    return null;
+  }
+
+  /**
    * Unsorted iterator - in heap order. Does not poll the heap.
    * 
    * Use this class as follows:
