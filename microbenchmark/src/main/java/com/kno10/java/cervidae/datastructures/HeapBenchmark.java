@@ -60,12 +60,12 @@ public class HeapBenchmark extends Benchmark {
         iheap = new IntegerMinHeap4();
       }
     },
-/*     HEAP5 {
+     HEAP5 {
       {
         dheap = new DoubleMinHeap5();
         iheap = new IntegerMinHeap5();
       }
-    }, */
+    },
     ;
 
     DoubleHeap dheap;

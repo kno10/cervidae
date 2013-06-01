@@ -170,31 +170,14 @@ public class ${Type}MaxHeap4${def-generics} implements ${parent-Type}Heap${use-g
   private void heapifyDown4(int pos, ${rawtype} cur) {
     final int stop = (size + 2) >>> 2;
     while (pos < stop) {
-      final int child = (pos << 2) + 1;
-      ${rawtype} best = heap[child];
-      int bestchild = child, candidate = child + 1, minsize = candidate;
-      if (size > minsize) {
+      int bestchild = (pos << 2) + 1;
+      ${rawtype} best = heap[bestchild];
+      int candidate = bestchild + 1;
+      for (int i = 0; i < 3 && candidate < size; i++, candidate++) {
         ${rawtype} nextchild = heap[candidate];
         if (${compare,<,best,nextchild}) {
           bestchild = candidate;
           best = nextchild;
-        }
-
-        minsize += 2;
-        if (size >= minsize) {
-          nextchild = heap[++candidate];
-          if (${compare,<,best,nextchild}) {
-            bestchild = candidate;
-            best = nextchild;
-          }
-
-          if (size > minsize) {
-            nextchild = heap[++candidate];
-            if (${compare,<,best,nextchild}) {
-              bestchild = candidate;
-              best = nextchild;
-            }
-          }
         }
       }
       if (${compare,>=,cur,best}) {

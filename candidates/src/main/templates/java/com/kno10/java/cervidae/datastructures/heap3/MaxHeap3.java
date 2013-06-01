@@ -188,20 +188,21 @@ public class ${Type}MaxHeap3${def-generics} implements ${parent-Type}Heap${use-g
    * @param cur Current object
    */
   private void heapifyDown3(int pos, ${rawtype} cur) {
-    final int stop = fastDiv3(size);
+    final int stop = fastDiv3(size + 1); // size - 2 + 3
     while (pos < stop) {
-      final int child = fastTimes3(pos) + 1;
-      ${rawtype} best = heap[child];
-      int bestchild = child, candidate = child + 1;
-      if (size > candidate) {
+      int bestchild = fastTimes3(pos) + 1;
+      ${rawtype} best = heap[bestchild];
+      int candidate = bestchild + 1;
+      if (candidate < size) {
         ${rawtype} nextchild = heap[candidate];
         if (${compare,<,best,nextchild}) {
           bestchild = candidate;
           best = nextchild;
         }
 
-        if (size >= candidate + 2) {
-          nextchild = heap[++candidate];
+        if (candidate <= size) {
+          candidate++;
+          nextchild = heap[candidate];
           if (${compare,<,best,nextchild}) {
             bestchild = candidate;
             best = nextchild;

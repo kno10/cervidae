@@ -188,15 +188,12 @@ public class ${Type}MaxHeap5${def-generics} implements ${parent-Type}Heap${use-g
    * @param cur Current object
    */
   private void heapifyDown5(int pos, ${rawtype} cur) {
-    final int stop = fastDiv5(size + 4);
+    final int stop = fastDiv5(size + 3); // - 2 + 5
     while (pos < stop) {
-      final int child = fastTimes5(pos) + 1;
-      ${rawtype} best = heap[child];
-      int bestchild = child, candidate = child + 1;
-      for (int i = 0; i < 4; i++) {
-        if (candidate >= size) {
-          break;
-        }
+      int bestchild = fastTimes5(pos) + 1;
+      ${rawtype} best = heap[bestchild];
+      int candidate = bestchild + 1;
+      for (int i = 0; i < 4 && candidate < size; i++, candidate++) {
         ${rawtype} nextchild = heap[candidate];
         if (${compare,<,best,nextchild}) {
           bestchild = candidate;
