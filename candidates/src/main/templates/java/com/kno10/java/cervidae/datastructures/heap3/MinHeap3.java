@@ -199,8 +199,8 @@ public class ${Type}MinHeap3${def-generics} implements ${parent-Type}Heap${use-g
           bestchild = candidate;
           best = nextchild;
         }
-        if (candidate <= size) {
-          candidate++;
+        candidate++;
+        if (candidate < size) {
           nextchild = heap[candidate];
           if (${compare,>,best,nextchild}) {
             bestchild = candidate;

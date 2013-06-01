@@ -200,8 +200,8 @@ public class ${Type}MaxHeap3${def-generics} implements ${parent-Type}Heap${use-g
           best = nextchild;
         }
 
-        if (candidate <= size) {
-          candidate++;
+        candidate++;
+        if (candidate < size) {
           nextchild = heap[candidate];
           if (${compare,<,best,nextchild}) {
             bestchild = candidate;
