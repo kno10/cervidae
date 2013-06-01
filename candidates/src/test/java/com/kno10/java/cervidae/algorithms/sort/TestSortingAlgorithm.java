@@ -3,8 +3,7 @@ package com.kno10.java.cervidae.algorithms.sort;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.Random;
-
+import com.kno10.java.cervidae.TestingUtils;
 import com.kno10.java.cervidae.adapter.arraylike.ComparableArrayAdapter;
 import com.kno10.java.cervidae.adapter.arraylike.DoubleArrayAdapter;
 
@@ -14,39 +13,6 @@ import com.kno10.java.cervidae.adapter.arraylike.DoubleArrayAdapter;
  * @author Erich Schubert
  */
 public abstract class TestSortingAlgorithm {
-  /**
-   * Generate an array of random numbers.
-   * 
-   * @param size Desired size.
-   * @param seed Random seed.
-   * @return Array of random numbers.
-   */
-  public static double[] generateRandomDoubles(int size, long seed) {
-    Random r = new Random(seed);
-    double[] ret = new double[size];
-    for(int i = 0; i < ret.length; i++) {
-      ret[i] = r.nextDouble();
-    }
-    return ret;
-  }
-
-  /**
-   * Generate a mostly-sorted data array.
-   * 
-   * @param size Desired array size.
-   * @param randomness Desired randomness.
-   * @param seed Random seed.
-   * @return Unsorted array.
-   */
-  public static double[] generateSemiSortedDoubles(int size, double randomness, long seed) {
-    Random r = new Random(seed);
-    double[] ret = new double[size];
-    for(int i = 0; i < ret.length; i++) {
-      ret[i] = randomness * r.nextDouble() + i / (double) size;
-    }
-    return ret;
-  }
-
   public static void testSorted(double[] data) {
     double current = data[0];
     for(int i = 1; i < data.length; i++) {
@@ -63,7 +29,7 @@ public abstract class TestSortingAlgorithm {
   }
 
   public static void testSortingAlgorithm(ArraySortAlgorithm alg, int size, long seed) {
-    double[] data = generateRandomDoubles(size, seed);
+    double[] data = TestingUtils.generateRandomDoubles(size, seed);
     Double[] dobj = new Double[data.length];
     Object[] objs = new Object[data.length];
     for(int i = 0; i < data.length; i++) {
