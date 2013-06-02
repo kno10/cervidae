@@ -173,11 +173,27 @@ public class ${Type}MaxHeap4${def-generics} implements ${parent-Type}Heap${use-g
       int bestchild = (pos << 2) + 1;
       ${rawtype} best = heap[bestchild];
       int candidate = bestchild + 1;
-      for (int i = 0; i < 3 && candidate < size; i++, candidate++) {
+      if(candidate < size) {
         ${rawtype} nextchild = heap[candidate];
         if (${compare,<,best,nextchild}) {
           bestchild = candidate;
           best = nextchild;
+        }
+        candidate++;
+        if(candidate < size) {
+          nextchild = heap[candidate];
+          if (${compare,<,best,nextchild}) {
+            bestchild = candidate;
+            best = nextchild;
+          }
+          candidate++;
+          if(candidate < size) {
+            nextchild = heap[candidate];
+            if (${compare,<,best,nextchild}) {
+              bestchild = candidate;
+              best = nextchild;
+            }
+          }
         }
       }
       if (${compare,>=,cur,best}) {

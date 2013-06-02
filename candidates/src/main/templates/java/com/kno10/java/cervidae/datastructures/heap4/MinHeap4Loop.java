@@ -13,7 +13,7 @@ import com.kno10.java.cervidae.datastructures.${parent-Type}Heap;
  * @author Erich Schubert
  * ${generics-documentation}
  */
-public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-generics} {
+public class ${Type}MinHeap4Loop${def-generics} implements ${parent-Type}Heap${use-generics} {
   /**
    * Heap storage.
    */
@@ -50,7 +50,7 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
    * ${extra-constructor-documentation}
    */
   ${unchecked}
-  public ${Type}MinHeap4(${extra-constructor}) {
+  public ${Type}MinHeap4Loop(${extra-constructor}) {
     super();
     ${extra-constructor-init}
     ${rawtype}[] heap = ${newarray,FOUR_HEAP_INITIAL_SIZE};
@@ -66,7 +66,7 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
    * ${extra-constructor-documentation}
    */
   ${unchecked}
-  public ${Type}MinHeap4(int minsize, ${extra-constructor}) {
+  public ${Type}MinHeap4Loop(int minsize, ${extra-constructor}) {
     super();
     ${extra-constructor-init}
     // TODO: upscale to the next "optimal" size?
@@ -173,27 +173,11 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
       int bestchild = (pos << 2) + 1;
       ${rawtype} best = heap[bestchild];
       int candidate = bestchild + 1;
-      if(candidate < size) {
+      for (int i = 0; i < 3 && candidate < size; i++, candidate++) {
         ${rawtype} nextchild = heap[candidate];
         if (${compare,>,best,nextchild}) {
           bestchild = candidate;
           best = nextchild;
-        }
-        candidate++;
-        if(candidate < size) {
-          nextchild = heap[candidate];
-          if (${compare,>,best,nextchild}) {
-            bestchild = candidate;
-            best = nextchild;
-          }
-          candidate++;
-          if(candidate < size) {
-            nextchild = heap[candidate];
-            if (${compare,>,best,nextchild}) {
-              bestchild = candidate;
-              best = nextchild;
-            }
-          }
         }
       }
       if (${compare,<=,cur,best}) {
@@ -214,7 +198,7 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
   @Override
   public String toString() {
     StringBuilder buf = new StringBuilder();
-    buf.append(${Type}MinHeap4.class.getSimpleName()).append(" [");
+    buf.append(${Type}MinHeap4Loop.class.getSimpleName()).append(" [");
     for (UnsortedIter iter = new UnsortedIter(); iter.valid(); iter.advance()) {
       buf.append(iter.get()).append(',');
     }

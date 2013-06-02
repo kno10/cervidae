@@ -1,8 +1,12 @@
 <template>
-  <input id="int">MinHeap5.java</input>
-  <output id="int">${Type}MinHeap5.java</output>
-  <input id="long">MaxHeap5.java</input>
-  <output id="long">${Type}MaxHeap5.java</output>
+  <input id="min">MinHeap5.java</input>
+  <output id="min">${Type}MinHeap5.java</output>
+  <input id="max">MaxHeap5.java</input>
+  <output id="max">${Type}MaxHeap5.java</output>
+  <input id="minl">MinHeap5Loop.java</input>
+  <output id="minl">${Type}MinHeap5Loop.java</output>
+  <input id="maxl">MaxHeap5Loop.java</input>
+  <output id="maxl">${Type}MaxHeap5Loop.java</output>
   <group>
     <pattern>\$\{NOTE\}</pattern>
     <substitute>Note: This code is automatically generated. DO NOT MODIFY.</substitute>

@@ -13,7 +13,7 @@ import com.kno10.java.cervidae.datastructures.${parent-Type}Heap;
  * @author Erich Schubert
  * ${generics-documentation}
  */
-public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-generics} {
+public class ${Type}MaxHeap4Loop${def-generics} implements ${parent-Type}Heap${use-generics} {
   /**
    * Heap storage.
    */
@@ -50,7 +50,7 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
    * ${extra-constructor-documentation}
    */
   ${unchecked}
-  public ${Type}MinHeap4(${extra-constructor}) {
+  public ${Type}MaxHeap4Loop(${extra-constructor}) {
     super();
     ${extra-constructor-init}
     ${rawtype}[] heap = ${newarray,FOUR_HEAP_INITIAL_SIZE};
@@ -66,7 +66,7 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
    * ${extra-constructor-documentation}
    */
   ${unchecked}
-  public ${Type}MinHeap4(int minsize, ${extra-constructor}) {
+  public ${Type}MaxHeap4Loop(int minsize, ${extra-constructor}) {
     super();
     ${extra-constructor-init}
     // TODO: upscale to the next "optimal" size?
@@ -111,7 +111,7 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
   public void add(${api-type} key, int max) {
     if (size < max) {
       add(key);
-    } else if (${compare,<=,heap[0],key}) {
+    } else if (${compare,>=,heap[0],key}) {
       replaceTopElement(key);
     }
   }
@@ -135,7 +135,7 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
     while (pos > 0) {
       final int parent = (pos - 1) >>> 2;
       ${rawtype} par = heap[parent];
-      if (${compare,>=,cur,par}) {
+      if (${compare,<=,cur,par}) {
         break;
       }
       heap[pos] = par;
@@ -173,30 +173,14 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
       int bestchild = (pos << 2) + 1;
       ${rawtype} best = heap[bestchild];
       int candidate = bestchild + 1;
-      if(candidate < size) {
+      for (int i = 0; i < 3 && candidate < size; i++, candidate++) {
         ${rawtype} nextchild = heap[candidate];
-        if (${compare,>,best,nextchild}) {
+        if (${compare,<,best,nextchild}) {
           bestchild = candidate;
           best = nextchild;
         }
-        candidate++;
-        if(candidate < size) {
-          nextchild = heap[candidate];
-          if (${compare,>,best,nextchild}) {
-            bestchild = candidate;
-            best = nextchild;
-          }
-          candidate++;
-          if(candidate < size) {
-            nextchild = heap[candidate];
-            if (${compare,>,best,nextchild}) {
-              bestchild = candidate;
-              best = nextchild;
-            }
-          }
-        }
       }
-      if (${compare,<=,cur,best}) {
+      if (${compare,>=,cur,best}) {
         break;
       }
       heap[pos] = best;
@@ -214,7 +198,7 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
   @Override
   public String toString() {
     StringBuilder buf = new StringBuilder();
-    buf.append(${Type}MinHeap4.class.getSimpleName()).append(" [");
+    buf.append(${Type}MaxHeap4Loop.class.getSimpleName()).append(" [");
     for (UnsortedIter iter = new UnsortedIter(); iter.valid(); iter.advance()) {
       buf.append(iter.get()).append(',');
     }
@@ -235,8 +219,8 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
   protected String checkHeap() {
     for (int i = 1; i < size; i++) {
       final int parent = (i - 1) >>> 2;
-      if (${compare,>,heap[parent],heap[i]}) {
-        return "@" + parent + ": " + heap[parent] + " > @" + i + ": " + heap[i];
+      if (${compare,<,heap[parent],heap[i]}) {
+        return "@" + parent + ": " + heap[parent] + " < @" + i + ": " + heap[i];
       }
     }
     return null;

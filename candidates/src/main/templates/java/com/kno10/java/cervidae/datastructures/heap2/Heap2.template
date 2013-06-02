@@ -1,8 +1,8 @@
 <template>
-  <input id="int">MinHeap2.java</input>
-  <output id="int">${Type}MinHeap2.java</output>
-  <input id="long">MaxHeap2.java</input>
-  <output id="long">${Type}MaxHeap2.java</output>
+  <input id="min">MinHeap2.java</input>
+  <output id="min">${Type}MinHeap2.java</output>
+  <input id="max">MaxHeap2.java</input>
+  <output id="max">${Type}MaxHeap2.java</output>
   <group>
     <pattern>\$\{NOTE\}</pattern>
     <substitute>Note: This code is automatically generated. DO NOT MODIFY.</substitute>

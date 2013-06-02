@@ -67,6 +67,13 @@
 								<commandLineArgument>-i macro -l 300s</commandLineArgument>
 							</commandLineArguments>
 						</program>
+						<program>
+							<mainClass>com.kno10.java.cervidae.datastructures.ObjectHeapBenchmark</mainClass>
+							<name>benchmark-objheap</name>
+							<commandLineArguments>
+								<commandLineArgument>-i macro -l 300s</commandLineArgument>
+							</commandLineArguments>
+						</program>
 					</programs>
 					<platforms>
 						<platform>unix</platform>

@@ -1,4 +1,4 @@
-package com.kno10.java.cervidae.datastructures.heap4;
+package com.kno10.java.cervidae.datastructures.heap5;
 
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
@@ -6,14 +6,14 @@ import java.util.ConcurrentModificationException;
 import com.kno10.java.cervidae.datastructures.${parent-Type}Heap;
 
 /**
- * Priority queue, based on a 4-ary heap.
+ * Priority queue, based on a 5-ary heap.
  * 
  * This code was automatically instantiated for the type: ${Type}
  * 
  * @author Erich Schubert
  * ${generics-documentation}
  */
-public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-generics} {
+public class ${Type}MinHeap5Loop${def-generics} implements ${parent-Type}Heap${use-generics} {
   /**
    * Heap storage.
    */
@@ -30,17 +30,17 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
   protected int modCount = 0;
 
   /**
-   * Initial size of 4-ary heap when initialized.
+   * Initial size of 5-ary heap when initialized.
+   *
+   * 31 = 5-ary heap of height 2: 1 + 5 + 5*5
+   *
+   * 156 = 5-ary heap of height 3: 31 + 5*5*5
+   *
+   * 781 = 5-ary heap of height 4: 156 + 5*5*5*5
    * 
-   * 21 = 4-ary heap of height 2: 1 + 4 + 4*4
-   * 
-   * 85 = 4-ary heap of height 3: 21 + 4*4*4
-   * 
-   * 341 = 4-ary heap of height 4: 85 + 4*4*4*4
-   * 
-   * Without further hints, start with the smallest, 21 elements.
+   * Without further hints, start with 31 elements
    */
-  private final static int FOUR_HEAP_INITIAL_SIZE = 21;
+  private final static int FIVE_HEAP_INITIAL_SIZE = 31;
 
   ${extra-fields}
 
@@ -50,10 +50,10 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
    * ${extra-constructor-documentation}
    */
   ${unchecked}
-  public ${Type}MinHeap4(${extra-constructor}) {
+  public ${Type}MinHeap5Loop(${extra-constructor}) {
     super();
     ${extra-constructor-init}
-    ${rawtype}[] heap = ${newarray,FOUR_HEAP_INITIAL_SIZE};
+    ${rawtype}[] heap = ${newarray,FIVE_HEAP_INITIAL_SIZE};
     this.heap = heap;
     this.size = 0;
     this.modCount = 0;
@@ -66,7 +66,7 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
    * ${extra-constructor-documentation}
    */
   ${unchecked}
-  public ${Type}MinHeap4(int minsize, ${extra-constructor}) {
+  public ${Type}MinHeap5Loop(int minsize, ${extra-constructor}) {
     super();
     ${extra-constructor-init}
     // TODO: upscale to the next "optimal" size?
@@ -74,6 +74,26 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
     this.heap = heap;
     this.size = 0;
     this.modCount = 0;
+  }
+
+  /**
+   * Fast integer division by 5 operator. INCORRECT for negative values!
+   * 
+   * @param v Input value
+   * @return v / 5, rounded down.
+   */
+  public static final int fastDiv5(int v) {
+    return (int) ((v * 0xCCCCCCCDL) >>> 34);
+  }
+
+  /**
+   * Fast multiplication with 5 operator.
+   * 
+   * @param v Input value
+   * @return v * 5
+   */
+  public static final int fastTimes5(int v) {
+    return (v << 2) + v;
   }
 
   @Override
@@ -98,12 +118,12 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
   public void add(${api-type} o) {
     final ${rawtype} co = ${rawcast}o;
     if (size >= heap.length) {
-      // Almost double, but remain an odd number
-      heap = Arrays.copyOf(heap, heap.length + heap.length - 1);
+      // Grow by 50%
+      heap = Arrays.copyOf(heap, heap.length + (heap.length >>> 1));
     }
     final int pos = size;
     ++size;
-    heapifyUp4(pos, co);
+    heapifyUp5(pos, co);
     ++modCount;
   }
 
@@ -120,20 +140,20 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
   ${unchecked}
   public ${api-type} replaceTopElement(${api-type} reinsert) {
     final ${rawtype} ret = heap[0];
-    heapifyDown4(0, ${rawcast} reinsert);
+    heapifyDown5(0, ${rawcast} reinsert);
     ++modCount;
     return ${api-cast}ret;
   }
 
   /**
-   * Heapify-Up method for 4-ary heap.
+   * Heapify-Up method for 5-ary heap.
    * 
-   * @param pos Position in 4-ary heap.
+   * @param pos Position in 5-ary heap.
    * @param cur Current object
    */
-  private void heapifyUp4(int pos, ${rawtype} cur) {
+  private void heapifyUp5(int pos, ${rawtype} cur) {
     while (pos > 0) {
-      final int parent = (pos - 1) >>> 2;
+      final int parent = fastDiv5(pos - 1);
       ${rawtype} par = heap[parent];
       if (${compare,>=,cur,par}) {
         break;
@@ -153,7 +173,7 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
     if (size > 0) {
       final ${rawtype} reinsert = heap[size];
       heap[size] = ${null};
-      heapifyDown4(0, reinsert);
+      heapifyDown5(0, reinsert);
     } else {
       heap[0] = ${null};
     }
@@ -162,38 +182,22 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
   }
 
   /**
-   * Heapify-Down for 4-ary heap.
+   * Heapify-Down for 5-ary heap.
    * 
-   * @param pos Position in 4-ary heap.
+   * @param pos Position in 5-ary heap.
    * @param cur Current object
    */
-  private void heapifyDown4(int pos, ${rawtype} cur) {
-    final int stop = (size + 2) >>> 2;
+  private void heapifyDown5(int pos, ${rawtype} cur) {
+    final int stop = fastDiv5(size + 3); // - 2 + 5
     while (pos < stop) {
-      int bestchild = (pos << 2) + 1;
+      int bestchild = fastTimes5(pos) + 1;
       ${rawtype} best = heap[bestchild];
       int candidate = bestchild + 1;
-      if(candidate < size) {
+      for (int i = 0; i < 4 && candidate < size; i++, candidate++) {
         ${rawtype} nextchild = heap[candidate];
         if (${compare,>,best,nextchild}) {
           bestchild = candidate;
           best = nextchild;
-        }
-        candidate++;
-        if(candidate < size) {
-          nextchild = heap[candidate];
-          if (${compare,>,best,nextchild}) {
-            bestchild = candidate;
-            best = nextchild;
-          }
-          candidate++;
-          if(candidate < size) {
-            nextchild = heap[candidate];
-            if (${compare,>,best,nextchild}) {
-              bestchild = candidate;
-              best = nextchild;
-            }
-          }
         }
       }
       if (${compare,<=,cur,best}) {
@@ -214,17 +218,12 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
   @Override
   public String toString() {
     StringBuilder buf = new StringBuilder();
-    buf.append(${Type}MinHeap4.class.getSimpleName()).append(" [");
+    buf.append(${Type}MinHeap5Loop.class.getSimpleName()).append(" [");
     for (UnsortedIter iter = new UnsortedIter(); iter.valid(); iter.advance()) {
       buf.append(iter.get()).append(',');
     }
     buf.append(']');
     return buf.toString();
-  }
-
-  @Override
-  public UnsortedIter unsortedIter() {
-    return new UnsortedIter();
   }
 
   /**
@@ -234,12 +233,17 @@ public class ${Type}MinHeap4${def-generics} implements ${parent-Type}Heap${use-g
    */
   protected String checkHeap() {
     for (int i = 1; i < size; i++) {
-      final int parent = (i - 1) >>> 2;
+      final int parent = fastDiv5(i - 1);
       if (${compare,>,heap[parent],heap[i]}) {
         return "@" + parent + ": " + heap[parent] + " > @" + i + ": " + heap[i];
       }
     }
     return null;
+  }
+
+  @Override
+  public UnsortedIter unsortedIter() {
+    return new UnsortedIter();
   }
 
   /**

@@ -193,11 +193,35 @@ public class ${Type}MaxHeap5${def-generics} implements ${parent-Type}Heap${use-g
       int bestchild = fastTimes5(pos) + 1;
       ${rawtype} best = heap[bestchild];
       int candidate = bestchild + 1;
-      for (int i = 0; i < 4 && candidate < size; i++, candidate++) {
+      if (candidate < size) {
         ${rawtype} nextchild = heap[candidate];
         if (${compare,<,best,nextchild}) {
           bestchild = candidate;
           best = nextchild;
+        }
+        candidate++;
+        if (candidate < size) {
+          nextchild = heap[candidate];
+          if (${compare,<,best,nextchild}) {
+            bestchild = candidate;
+            best = nextchild;
+          }
+          candidate++;
+          if (candidate < size) {
+            nextchild = heap[candidate];
+            if (${compare,<,best,nextchild}) {
+              bestchild = candidate;
+              best = nextchild;
+            }
+            candidate++;
+            if (candidate < size) {
+              nextchild = heap[candidate];
+              if (${compare,<,best,nextchild}) {
+                bestchild = candidate;
+                best = nextchild;
+              }
+            }
+          }
         }
       }
       if (${compare,>=,cur,best}) {

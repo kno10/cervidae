@@ -11,11 +11,17 @@ import com.kno10.java.cervidae.datastructures.heap2.IntegerMinHeap2;
 import com.kno10.java.cervidae.datastructures.heap24.DoubleMinHeap24;
 import com.kno10.java.cervidae.datastructures.heap24.IntegerMinHeap24;
 import com.kno10.java.cervidae.datastructures.heap3.DoubleMinHeap3;
+import com.kno10.java.cervidae.datastructures.heap3.DoubleMinHeap3Loop;
 import com.kno10.java.cervidae.datastructures.heap3.IntegerMinHeap3;
+import com.kno10.java.cervidae.datastructures.heap3.IntegerMinHeap3Loop;
 import com.kno10.java.cervidae.datastructures.heap4.DoubleMinHeap4;
 import com.kno10.java.cervidae.datastructures.heap4.IntegerMinHeap4;
+import com.kno10.java.cervidae.datastructures.heap4.DoubleMinHeap4Loop;
+import com.kno10.java.cervidae.datastructures.heap4.IntegerMinHeap4Loop;
 import com.kno10.java.cervidae.datastructures.heap5.DoubleMinHeap5;
+import com.kno10.java.cervidae.datastructures.heap5.DoubleMinHeap5Loop;
 import com.kno10.java.cervidae.datastructures.heap5.IntegerMinHeap5;
+import com.kno10.java.cervidae.datastructures.heap5.IntegerMinHeap5Loop;
 
 /**
  * Benchmark class for basic heaps.
@@ -60,10 +66,28 @@ public class HeapBenchmark extends Benchmark {
         iheap = new IntegerMinHeap4();
       }
     },
-     HEAP5 {
+    HEAP5 {
       {
         dheap = new DoubleMinHeap5();
         iheap = new IntegerMinHeap5();
+      }
+    },
+    HEAP3L {
+      {
+        dheap = new DoubleMinHeap3Loop();
+        iheap = new IntegerMinHeap3Loop();
+      }
+    },
+    HEAP4L {
+      {
+        dheap = new DoubleMinHeap4Loop();
+        iheap = new IntegerMinHeap4Loop();
+      }
+    },
+    HEAP5L {
+      {
+        dheap = new DoubleMinHeap5Loop();
+        iheap = new IntegerMinHeap5Loop();
       }
     },
     ;
@@ -73,13 +97,13 @@ public class HeapBenchmark extends Benchmark {
     IntegerHeap iheap;
 
     double sort(double[] data) {
-      for (double d : data) {
+      for(double d : data) {
         dheap.add(d);
       }
       double cur = dheap.peek();
-      while (!dheap.isEmpty()) {
+      while(!dheap.isEmpty()) {
         double next = dheap.poll();
-        if (next < cur) {
+        if(next < cur) {
           throw new RuntimeException("Heap inconsistent." + dheap.getClass().getSimpleName() + " at " + dheap.size() + " " + dheap.toString());
         }
         cur = next;
@@ -88,13 +112,13 @@ public class HeapBenchmark extends Benchmark {
     }
 
     int sort(int[] data) {
-      for (int d : data) {
+      for(int d : data) {
         iheap.add(d);
       }
       int cur = iheap.peek();
-      while (!iheap.isEmpty()) {
+      while(!iheap.isEmpty()) {
         int next = iheap.poll();
-        if (next < cur) {
+        if(next < cur) {
           throw new RuntimeException("Heap inconsistent: " + iheap.getClass().getSimpleName() + " at " + iheap.size() + " " + iheap.toString());
         }
         cur = next;
@@ -119,7 +143,7 @@ public class HeapBenchmark extends Benchmark {
   // Microbenchmark variant:
   public double timeDoubleHeap(int reps) {
     double ret = 0.0;
-    for (int i = 0; i < reps; i++) {
+    for(int i = 0; i < reps; i++) {
       double[] tmp = array.clone();
       ret += method.sort(tmp) + tmp[0];
     }
@@ -135,7 +159,7 @@ public class HeapBenchmark extends Benchmark {
   // Microbenchmark variant:
   public double timeIntegerHeap(int reps) {
     int ret = 0;
-    for (int i = 0; i < reps; i++) {
+    for(int i = 0; i < reps; i++) {
       int[] tmp = iarray.clone();
       ret ^= method.sort(tmp) ^ tmp[0];
     }
