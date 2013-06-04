@@ -6,6 +6,7 @@ import com.google.caliper.api.Macrobenchmark;
 import com.google.caliper.runner.CaliperMain;
 import com.kno10.java.cervidae.algorithms.sort.SortBenchmarkUtil;
 import com.kno10.java.cervidae.algorithms.sort.SortBenchmarkUtil.MacroPattern;
+import com.kno10.java.cervidae.datastructures.HeapBenchmarkUtil.Workload;
 import com.kno10.java.cervidae.datastructures.heap2.DoubleMinHeap2;
 import com.kno10.java.cervidae.datastructures.heap2.IntegerMinHeap2;
 import com.kno10.java.cervidae.datastructures.heap24.DoubleMinHeap24;
@@ -29,17 +30,20 @@ import com.kno10.java.cervidae.datastructures.heap5.IntegerMinHeap5Loop;
  * @author Erich Schubert
  */
 public class HeapBenchmark extends Benchmark {
-  @Param({ "10", "100", "1000", "10000" })
-  int size;
-
-  @Param({ ".01", ".1", ".5", "1" })
-  double randomness;
-
   @Param
   Method method;
 
   @Param
   MacroPattern pattern;
+
+  @Param({ ".01", ".1", ".5", "1" })
+  double randomness;
+
+  @Param({ "10", "100", "1000", "10000" })
+  int size;
+
+  @Param
+  Workload workload;
 
   enum Method {
     HEAP2 {
@@ -96,33 +100,55 @@ public class HeapBenchmark extends Benchmark {
 
     IntegerHeap iheap;
 
-    double sort(double[] data) {
-      for(double d : data) {
-        dheap.add(d);
-      }
-      double cur = dheap.peek();
-      while(!dheap.isEmpty()) {
-        double next = dheap.poll();
-        if(next < cur) {
-          throw new RuntimeException("Heap inconsistent." + dheap.getClass().getSimpleName() + " at " + dheap.size() + " " + dheap.toString());
+    double process(double[] data, Workload workload) {
+      final int numbatches = workload.numBatches(data.length);
+      int pos = 0;
+      double cur = Double.NaN;
+      for (int b = 0; b < numbatches; b++) {
+        final int batchsize = workload.batchSize(b, data.length);
+        if (batchsize > 0) {
+          for (int i = 0; i < batchsize; i++, pos++) {
+            dheap.add(data[pos]);
+          }
+        } else {
+          cur = Double.NEGATIVE_INFINITY;
+          // Negative
+          for (int i = 0; i > batchsize; i--) {
+            double next = dheap.poll();
+            if (next < cur) {
+              throw new RuntimeException("Heap inconsistent." + dheap.getClass().getSimpleName() + " at " + pos + "/" + dheap.size() + " " + dheap.toString());
+            }
+            cur = next;
+          }
         }
-        cur = next;
       }
+      dheap.clear();
       return cur;
     }
 
-    int sort(int[] data) {
-      for(int d : data) {
-        iheap.add(d);
-      }
-      int cur = iheap.peek();
-      while(!iheap.isEmpty()) {
-        int next = iheap.poll();
-        if(next < cur) {
-          throw new RuntimeException("Heap inconsistent: " + iheap.getClass().getSimpleName() + " at " + iheap.size() + " " + iheap.toString());
+    int process(int[] data, Workload workload) {
+      final int numbatches = workload.numBatches(data.length);
+      int pos = 0;
+      int cur = Integer.MAX_VALUE;
+      for (int b = 0; b < numbatches; b++) {
+        final int batchsize = workload.batchSize(b, data.length);
+        if (batchsize > 0) {
+          for (int i = 0; i < batchsize; i++, pos++) {
+            iheap.add(data[pos]);
+          }
+        } else {
+          cur = Integer.MIN_VALUE;
+          // Negative
+          for (int i = 0; i > batchsize; i--) {
+            int next = iheap.poll();
+            if (next < cur) {
+              throw new RuntimeException("Heap inconsistent." + iheap.getClass().getSimpleName() + " at " + pos + "/" + iheap.size() + " " + iheap.toString());
+            }
+            cur = next;
+          }
         }
-        cur = next;
       }
+      iheap.clear();
       return cur;
     }
   }
@@ -143,9 +169,9 @@ public class HeapBenchmark extends Benchmark {
   // Microbenchmark variant:
   public double timeDoubleHeap(int reps) {
     double ret = 0.0;
-    for(int i = 0; i < reps; i++) {
+    for (int i = 0; i < reps; i++) {
       double[] tmp = array.clone();
-      ret += method.sort(tmp) + tmp[0];
+      ret += method.process(tmp, workload) + tmp[0];
     }
     return ret;
   }
@@ -153,15 +179,15 @@ public class HeapBenchmark extends Benchmark {
   @Macrobenchmark
   public double benchmarkDoubleHeap() {
     double[] tmp = array.clone();
-    return method.sort(tmp) + tmp[0];
+    return method.process(tmp, workload) + tmp[0];
   }
 
   // Microbenchmark variant:
   public double timeIntegerHeap(int reps) {
     int ret = 0;
-    for(int i = 0; i < reps; i++) {
+    for (int i = 0; i < reps; i++) {
       int[] tmp = iarray.clone();
-      ret ^= method.sort(tmp) ^ tmp[0];
+      ret ^= method.process(tmp, workload) ^ tmp[0];
     }
     return ret;
   }
@@ -169,7 +195,7 @@ public class HeapBenchmark extends Benchmark {
   @Macrobenchmark
   public int benchmarkIntegerHeap() {
     int[] tmp = iarray.clone();
-    return method.sort(tmp) + tmp[0];
+    return method.process(tmp, workload) + tmp[0];
   }
 
   public static void main(String[] args) {
