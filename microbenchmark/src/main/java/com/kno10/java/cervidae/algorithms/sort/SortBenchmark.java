@@ -37,6 +37,7 @@ public class SortBenchmark extends Benchmark {
   BASE + "BubbleSortTextbook", //
   BASE + "BidirectionalBubbleSort", //
   BASE + "InsertionSort", //
+  BASE + "BinaryInsertionSort", //
   // Reference combinations
   BASE + "SortBenchmark$JavaSort", //
   BASE + "SortBenchmark$OptimizedSort", //
