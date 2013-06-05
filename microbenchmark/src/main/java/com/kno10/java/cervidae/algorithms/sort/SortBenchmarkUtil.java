@@ -75,23 +75,11 @@ public final class SortBenchmarkUtil {
   }
 
   public static int[] generateRandomIntegerData(int size, MacroPattern pattern, double randomness, long seed) {
+    if (MacroPattern.NORMAL10D.equals(pattern)) {
+      return null;
+    }
     int[] array = new int[size];
     Random rnd = new Random(seed);
-    if (MacroPattern.NORMAL10D.equals(pattern)) {
-      double[] ref = new double[10];
-      for (int d = 0; d < 10; d++) {
-        ref[d] = rnd.nextGaussian();
-      }
-      for (int i = 0; i < size; i++) {
-        double dist = 0.0;
-        for (int d = 0; d < 10; d++) {
-          double v = ref[d] - rnd.nextGaussian();
-          dist += v * v;
-        }
-        array[i] = (int)(dist * 1000);
-      }
-      return array;
-    }
     for (int i = 0; i < size; i++) {
       array[i] = (int) (Integer.MAX_VALUE * (rnd.nextDouble() * randomness + (1. - randomness) * pattern.val(i, size)));
     }
@@ -102,6 +90,9 @@ public final class SortBenchmarkUtil {
   private final static int FIRST_CHAR = 33, LAST_CHAR = 128;
 
   public static String[] generateRandomStringData(int size, MacroPattern pattern, double randomness, long seed) {
+    if (MacroPattern.NORMAL10D.equals(pattern)) {
+      return null;
+    }
     String[] array = new String[size];
     Random rnd = new Random(seed);
     for (int i = 0; i < size; i++) {

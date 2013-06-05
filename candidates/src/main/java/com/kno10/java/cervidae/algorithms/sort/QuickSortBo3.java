@@ -13,8 +13,10 @@ import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
 public class QuickSortBo3 extends AbstractArraySortAlgorithm {
   /**
    * Threshold for using insertion sort.
+   * 
+   * Values of 20-30 were best in benchmarking.
    */
-  private static final int INSERTION_THRESHOLD = 35;
+  private static final int INSERTION_THRESHOLD = 26;
 
   /**
    * Static instance of algorithm.

@@ -6,9 +6,11 @@ import java.util.PriorityQueue;
 import com.google.caliper.Benchmark;
 import com.google.caliper.Param;
 import com.google.caliper.api.Macrobenchmark;
+import com.google.caliper.api.SkipThisScenarioException;
 import com.google.caliper.runner.CaliperMain;
 import com.kno10.java.cervidae.algorithms.sort.SortBenchmarkUtil;
 import com.kno10.java.cervidae.algorithms.sort.SortBenchmarkUtil.MacroPattern;
+import com.kno10.java.cervidae.datastructures.HeapBenchmarkUtil.Workload;
 import com.kno10.java.cervidae.datastructures.heap2.ComparableMinHeap2;
 import com.kno10.java.cervidae.datastructures.heap24.ComparableMinHeap24;
 import com.kno10.java.cervidae.datastructures.heap3.ComparableMinHeap3;
@@ -24,6 +26,12 @@ import com.kno10.java.cervidae.datastructures.heap5.ComparableMinHeap5Loop;
  * @author Erich Schubert
  */
 public class ObjectHeapBenchmark extends Benchmark {
+  @Param
+  Method method;
+
+  @Param
+  MacroPattern pattern;
+
   @Param({ "10", "100", "1000", "10000" })
   int size;
 
@@ -31,10 +39,7 @@ public class ObjectHeapBenchmark extends Benchmark {
   double randomness;
 
   @Param
-  Method method;
-
-  @Param
-  MacroPattern pattern;
+  Workload workload;
 
   enum Method {
     HEAP2 {
@@ -91,46 +96,66 @@ public class ObjectHeapBenchmark extends Benchmark {
       ArrayList<String> salist = new ArrayList<>();
 
       @Override
-      double sort(double[] data) {
+      double process(double[] data, Workload workload) {
+        final int numbatches = workload.numBatches(data.length);
         alist.clear();
-        // We sort increasing, as removing from the end is cheaper.
-        for(double d : data) {
-          Double o = Double.valueOf(d);
-          int pos = alist.size();
-          while(pos > 0 && o.compareTo(alist.get(pos - 1)) > 0) {
-            pos--;
+        int pos = 0;
+        Double cur = Double.NEGATIVE_INFINITY;
+        for (int b = 0; b < numbatches; b++) {
+          final int batchsize = workload.batchSize(b, data.length);
+          if (batchsize > 0) {
+            for (int i = 0; i < batchsize; i++, pos++) {
+              // We sort increasing, as removing from the end is cheaper.
+              Double o = Double.valueOf(data[pos]);
+              int ipos = alist.size();
+              while (ipos > 0 && o.compareTo(alist.get(ipos - 1)) > 0) {
+                ipos--;
+              }
+              alist.add(ipos, o);
+            }
+          } else {
+            cur = null;
+            // Negative
+            for (int i = 0; i > batchsize; i--) {
+              Double next = alist.remove(alist.size() - 1);
+              if (cur != null && next < cur) {
+                throw new RuntimeException("Heap inconsistent." + alist.getClass().getSimpleName() + " at " + alist.size() + " " + alist.toString());
+              }
+              cur = next;
+            }
           }
-          alist.add(pos, o);
-        }
-        Double cur = alist.get(alist.size() - 1);
-        while(!alist.isEmpty()) {
-          Double next = alist.remove(alist.size() - 1);
-          if(next < cur) {
-            throw new RuntimeException("Heap inconsistent." + alist.getClass().getSimpleName() + " at " + alist.size() + " " + alist.toString());
-          }
-          cur = next;
         }
         return cur;
       }
 
       @Override
-      int sort(String[] data) {
+      int process(String[] data, Workload workload) {
+        final int numbatches = workload.numBatches(data.length);
         salist.clear();
-        // We sort increasing, as removing from the end is cheaper.
-        for(String d : data) {
-          int pos = salist.size();
-          while(pos > 0 && d.compareTo(salist.get(pos - 1)) > 0) {
-            pos--;
+        int pos = 0;
+        String cur = null;
+        for (int b = 0; b < numbatches; b++) {
+          final int batchsize = workload.batchSize(b, data.length);
+          if (batchsize > 0) {
+            for (int i = 0; i < batchsize; i++, pos++) {
+              // We sort increasing, as removing from the end is cheaper.
+              int ipos = salist.size();
+              while (ipos > 0 && data[pos].compareTo(salist.get(ipos - 1)) > 0) {
+                ipos--;
+              }
+              salist.add(ipos, data[pos]);
+            }
+          } else {
+            cur = null;
+            // Negative
+            for (int i = 0; i > batchsize; i--) {
+              String next = salist.remove(salist.size() - 1);
+              if (cur != null && cur.compareTo(next) > 0) {
+                throw new RuntimeException("Heap inconsistent." + salist.getClass().getSimpleName() + " at " + salist.size() + " " + salist.toString());
+              }
+              cur = next;
+            }
           }
-          salist.add(pos, d);
-        }
-        String cur = salist.get(salist.size() - 1);
-        while(!salist.isEmpty()) {
-          String next = salist.remove(salist.size() - 1);
-          if(cur.compareTo(next) > 0) {
-            throw new RuntimeException("Heap inconsistent." + salist.getClass().getSimpleName() + " at " + salist.size() + " " + salist.toString());
-          }
-          cur = next;
         }
         return cur.charAt(0);
       }
@@ -141,36 +166,56 @@ public class ObjectHeapBenchmark extends Benchmark {
       PriorityQueue<String> jsheap = new PriorityQueue<>();
 
       @Override
-      double sort(double[] data) {
-        jheap.clear();
-        for(double d : data) {
-          jheap.add(Double.valueOf(d));
-        }
-        Double cur = jheap.peek();
-        while(!jheap.isEmpty()) {
-          Double next = jheap.poll();
-          if(next < cur) {
-            throw new RuntimeException("Heap inconsistent." + jheap.getClass().getSimpleName() + " at " + jheap.size() + " " + jheap.toString());
+      double process(double[] data, Workload workload) {
+        final int numbatches = workload.numBatches(data.length);
+        int pos = 0;
+        Double cur = Double.NaN;
+        for (int b = 0; b < numbatches; b++) {
+          final int batchsize = workload.batchSize(b, data.length);
+          if (batchsize > 0) {
+            for (int i = 0; i < batchsize; i++, pos++) {
+              jheap.add(Double.valueOf(data[pos]));
+            }
+          } else {
+            cur = Double.NEGATIVE_INFINITY;
+            // Negative
+            for (int i = 0; i > batchsize; i--) {
+              Double next = jheap.poll();
+              if (next < cur) {
+                throw new RuntimeException("Heap inconsistent." + jheap.getClass().getSimpleName() + " at " + pos + "/" + jheap.size() + " " + jheap.toString());
+              }
+              cur = next;
+            }
           }
-          cur = next;
         }
+        jheap.clear();
         return cur;
       }
 
       @Override
-      int sort(String[] data) {
-        jsheap.clear();
-        for(String d : data) {
-          jsheap.add(d);
-        }
-        String cur = jsheap.peek();
-        while(!jsheap.isEmpty()) {
-          String next = jsheap.poll();
-          if(cur.compareTo(next) > 0) {
-            throw new RuntimeException("Heap inconsistent." + jsheap.getClass().getSimpleName() + " at " + jsheap.size() + " " + jsheap.toString());
+      int process(String[] data, Workload workload) {
+        final int numbatches = workload.numBatches(data.length);
+        int pos = 0;
+        String cur = null;
+        for (int b = 0; b < numbatches; b++) {
+          final int batchsize = workload.batchSize(b, data.length);
+          if (batchsize > 0) {
+            for (int i = 0; i < batchsize; i++, pos++) {
+              jsheap.add(data[pos]);
+            }
+          } else {
+            cur = null;
+            // Negative
+            for (int i = 0; i > batchsize; i--) {
+              String next = jsheap.poll();
+              if (cur != null && cur.compareTo(next) > 0) {
+                throw new RuntimeException("Heap inconsistent." + jsheap.getClass().getSimpleName() + " at " + pos + "/" + jsheap.size() + " " + jsheap.toString());
+              }
+              cur = next;
+            }
           }
-          cur = next;
         }
+        jsheap.clear();
         return cur.charAt(0);
       }
     },
@@ -180,35 +225,55 @@ public class ObjectHeapBenchmark extends Benchmark {
 
     ObjectHeap<String> sheap;
 
-    double sort(double[] data) {
-      heap.clear();
-      for(double d : data) {
-        heap.add(Double.valueOf(d));
-      }
-      Double cur = heap.peek();
-      while(!heap.isEmpty()) {
-        Double next = heap.poll();
-        if(next < cur) {
-          throw new RuntimeException("Heap inconsistent." + heap.getClass().getSimpleName() + " at " + heap.size() + " " + heap.toString());
+    double process(double[] data, Workload workload) {
+      final int numbatches = workload.numBatches(data.length);
+      int pos = 0;
+      Double cur = Double.NaN;
+      for (int b = 0; b < numbatches; b++) {
+        final int batchsize = workload.batchSize(b, data.length);
+        if (batchsize > 0) {
+          for (int i = 0; i < batchsize; i++, pos++) {
+            heap.add(Double.valueOf(data[pos]));
+          }
+        } else {
+          cur = Double.NEGATIVE_INFINITY;
+          // Negative
+          for (int i = 0; i > batchsize; i--) {
+            Double next = heap.poll();
+            if (next < cur) {
+              throw new RuntimeException("Heap inconsistent." + heap.getClass().getSimpleName() + " at " + pos + "/" + heap.size() + " " + heap.toString());
+            }
+            cur = next;
+          }
         }
-        cur = next;
       }
+      heap.clear();
       return cur;
     }
 
-    int sort(String[] data) {
-      sheap.clear();
-      for(String d : data) {
-        sheap.add(d);
-      }
-      String cur = sheap.peek();
-      while(!sheap.isEmpty()) {
-        String next = sheap.poll();
-        if(cur.compareTo(next) > 0) {
-          throw new RuntimeException("Heap inconsistent." + sheap.getClass().getSimpleName() + " at " + sheap.size() + " " + sheap.toString());
+    int process(String[] data, Workload workload) {
+      final int numbatches = workload.numBatches(data.length);
+      int pos = 0;
+      String cur = null;
+      for (int b = 0; b < numbatches; b++) {
+        final int batchsize = workload.batchSize(b, data.length);
+        if (batchsize > 0) {
+          for (int i = 0; i < batchsize; i++, pos++) {
+            sheap.add(data[pos]);
+          }
+        } else {
+          cur = null;
+          // Negative
+          for (int i = 0; i > batchsize; i--) {
+            String next = sheap.poll();
+            if (cur != null && cur.compareTo(next) > 0) {
+              throw new RuntimeException("Heap inconsistent." + sheap.getClass().getSimpleName() + " at " + pos + "/" + sheap.size() + " " + sheap.toString());
+            }
+            cur = next;
+          }
         }
-        cur = next;
       }
+      sheap.clear();
       return cur.charAt(0);
     }
   }
@@ -229,33 +294,35 @@ public class ObjectHeapBenchmark extends Benchmark {
   // Microbenchmark variant:
   public double timeDoubleHeap(int reps) {
     double ret = 0.0;
-    for(int i = 0; i < reps; i++) {
-      double[] tmp = array.clone();
-      ret += method.sort(tmp) + tmp[0];
+    for (int i = 0; i < reps; i++) {
+      ret += method.process(array, workload) + array[0];
     }
     return ret;
   }
 
   @Macrobenchmark
   public double benchmarkDoubleHeap() {
-    double[] tmp = array.clone();
-    return method.sort(tmp) + tmp[0];
+    return method.process(array, workload) + array[0];
   }
 
   // Microbenchmark variant:
   public int timeStringHeap(int reps) {
+    if (sarray == null) {
+      throw new SkipThisScenarioException();
+    }
     int ret = 0;
-    for(int i = 0; i < reps; i++) {
-      String[] tmp = sarray.clone();
-      ret += method.sort(tmp) + tmp[0].charAt(0);
+    for (int i = 0; i < reps; i++) {
+      ret += method.process(sarray, workload) + sarray[0].charAt(0);
     }
     return ret;
   }
 
   @Macrobenchmark
   public double benchmarkStringHeap() {
-    String[] tmp = sarray.clone();
-    return method.sort(tmp) + tmp[0].charAt(0);
+    if (sarray == null) {
+      throw new SkipThisScenarioException();
+    }
+    return method.process(sarray, workload) + sarray[0].charAt(0);
   }
 
   public static void main(String[] args) {

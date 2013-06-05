@@ -23,8 +23,10 @@ import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
 public class DualPivotQuickSortBo5 extends AbstractArraySortAlgorithm {
   /**
    * Threshold for using insertion sort.
+   * 
+   * Values around 30 were best in benchmarking.
    */
-  private static final int INSERTION_THRESHOLD = 35;
+  private static final int INSERTION_THRESHOLD = 30;
 
   /**
    * Static instance.
@@ -75,7 +77,7 @@ public class DualPivotQuickSortBo5 extends AbstractArraySortAlgorithm {
 
     // Explicit (and optimal) sorting network for 5 elements
     // See Knuth for details.
-    SortingNetworks.sort5(adapter, data, m1, m2, m3, m4, m5);
+    InsertionSort.sort5(adapter, data, m1, m2, m3, m4, m5);
 
     // Choose the 2 and 4th as pivots, as we want to get three parts
     adapter.swap(data, m2, start);

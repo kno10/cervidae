@@ -13,8 +13,10 @@ import com.kno10.java.cervidae.adapter.arraylike.ArraySortAdapter;
 public class QuickSortBo5 extends AbstractArraySortAlgorithm {
   /**
    * Threshold for using insertion sort.
+   * 
+   * Values of 20-30 were best in benchmarking.
    */
-  private static final int INSERTION_THRESHOLD = 35;
+  private static final int INSERTION_THRESHOLD = 22;
 
   /**
    * Static instance of algorithm.
@@ -64,7 +66,7 @@ public class QuickSortBo5 extends AbstractArraySortAlgorithm {
     final int m4 = m3 + seventh;
     final int m5 = m4 + seventh;
 
-    SortingNetworks.sort5(adapter, data, m1, m2, m3, m4, m5);
+    InsertionSort.sort5(adapter, data, m1, m2, m3, m4, m5);
     // Move middle element (pivot) out of the way.
     adapter.swap(data, m3, last);
 

@@ -25,4 +25,49 @@ public class InsertionSort extends AbstractArraySortAlgorithm {
       }
     }
   }
+
+  /**
+   * Sort 5 elements (given positions {@code m1 < m2 < m3 < m4 < m5}).
+   * 
+   * @param adapter Adapter
+   * @param data Data store
+   * @param m1 First position
+   * @param m2 Second position
+   * @param m3 Third position
+   * @param m4 Fourth position
+   * @param m5 Fifth position
+   */
+  public static <T> void sort5(ArraySortAdapter<? super T> adapter, T data, int m1, int m2, int m3, int m4, int m5) {
+    // Insert second
+    if (adapter.greaterThan(data, m1, m2)) {
+      adapter.swap(data, m1, m2);
+    }
+    // Sort third and fourth.
+    if (adapter.greaterThan(data, m3, m4)) {
+      adapter.swap(data, m3, m4);
+    }
+    // Insert fourth and third
+    if (adapter.greaterThan(data, m2, m4)) {
+      adapter.swap(data, m2, m4);
+    }
+    if (adapter.greaterThan(data, m1, m3)) {
+      adapter.swap(data, m1, m3);
+    }
+    if (adapter.greaterThan(data, m2, m3)) {
+      adapter.swap(data, m2, m3);
+    }
+    // Insert fifth
+    if (adapter.greaterThan(data, m4, m5)) {
+      adapter.swap(data, m4, m5);
+      if (adapter.greaterThan(data, m3, m4)) {
+        adapter.swap(data, m3, m4);
+        if (adapter.greaterThan(data, m2, m4)) {
+          adapter.swap(data, m2, m3);
+          if (adapter.greaterThan(data, m1, m2)) {
+            adapter.swap(data, m1, m2);
+          }
+        }
+      }
+    }
+  }
 }

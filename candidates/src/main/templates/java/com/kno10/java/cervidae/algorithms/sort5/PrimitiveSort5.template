@@ -17,6 +17,10 @@
   <output id="iG">${Type}InsertionSort5G.java</output>
   <input id="iH">PrimitiveInsertionSort5H.java</input>
   <output id="iH">${Type}InsertionSort5H.java</output>
+  <input id="biA">PrimitiveBinaryInsertionSort5A.java</input>
+  <output id="biA">${Type}BinaryInsertionSort5A.java</output>
+  <input id="biB">PrimitiveBinaryInsertionSort5B.java</input>
+  <output id="biB">${Type}BinaryInsertionSort5B.java</output>
   <input id="dA">PrimitiveDecisionSort5A.java</input>
   <output id="dA">${Type}DecisionSort5A.java</output>
   <input id="dB">PrimitiveDecisionSort5B.java</input>

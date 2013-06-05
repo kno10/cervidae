@@ -149,6 +149,18 @@ public class Sort5Benchmark extends Benchmark {
         IntegerArrayQuickSort.STATIC.dualInsertionSort(data, 0, 5);
       }
     },
+    BINSERTIONA {
+      {
+        dsort = new DoubleBinaryInsertionSort5A();
+        isort = new IntegerBinaryInsertionSort5A();
+      }
+    },
+    BINSERTIONB {
+      {
+        dsort = new DoubleBinaryInsertionSort5B();
+        isort = new IntegerBinaryInsertionSort5B();
+      }
+    },
     ;
 
     DoubleSort5 dsort;
