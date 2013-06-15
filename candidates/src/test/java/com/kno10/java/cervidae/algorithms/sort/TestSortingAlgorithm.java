@@ -20,7 +20,8 @@ public abstract class TestSortingAlgorithm {
         StringBuilder buf = new StringBuilder();
         buf.append("Array not sorted at position ").append(i).append('\n');
         buf.append(current).append(" !<= ").append(data[i]).append('\n');
-        for(int j = Math.max(0, i - 10); j < Math.min(data.length, i + 10); j++) {
+        int end = data.length < i + 10 ? data.length : i + 10;
+        for(int j = i > 10 ? i - 10 : 0; j < end; j++) {
           buf.append(data[j]).append(' ');
         }
         fail(buf.toString());

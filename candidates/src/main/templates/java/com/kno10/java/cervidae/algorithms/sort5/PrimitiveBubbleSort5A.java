@@ -21,38 +21,38 @@ public class ${Type}BubbleSort5A implements ${Type}Sort5 {
   @Override
   public void sort5(${atype}[] data, int p1, int p2, int p3, int p4, int p5) {
     ${type} tmp;
-    tmp = (${type}) Math.max(data[p1], data[p2]);
-    data[p1] = (${type}) Math.min(data[p1], data[p2]);
+    tmp = (data[p1] > data[p2]) ? data[p1] : data[p2];
+    data[p1] = (data[p1] < data[p2]) ? data[p1] : data[p2];
     data[p2] = tmp;
-    tmp = (${type}) Math.max(data[p2], data[p3]);
-    data[p2] = (${type}) Math.min(data[p2], data[p3]);
+    tmp = (data[p2] > data[p3]) ? data[p2] : data[p3];
+    data[p2] = (data[p2] < data[p3]) ? data[p2] : data[p3];
     data[p3] = tmp;
-    tmp = (${type}) Math.max(data[p3], data[p4]);
-    data[p3] = (${type}) Math.min(data[p3], data[p4]);
+    tmp = (data[p3] > data[p4]) ? data[p3] : data[p4];
+    data[p3] = (data[p3] < data[p4]) ? data[p3] : data[p4];
     data[p4] = tmp;
-    tmp = (${type}) Math.max(data[p4], data[p5]);
-    data[p4] = (${type}) Math.min(data[p4], data[p5]);
+    tmp = (data[p4] > data[p5]) ? data[p4] : data[p5];
+    data[p4] = (data[p4] < data[p5]) ? data[p4] : data[p5];
     data[p5] = tmp;
     //
-    tmp = (${type}) Math.max(data[p1], data[p2]);
-    data[p1] = (${type}) Math.min(data[p1], data[p2]);
+    tmp = (data[p1] > data[p2]) ? data[p1] : data[p2];
+    data[p1] = (data[p1] < data[p2]) ? data[p1] : data[p2];
     data[p2] = tmp;
-    tmp = (${type}) Math.max(data[p2], data[p3]);
-    data[p2] = (${type}) Math.min(data[p2], data[p3]);
+    tmp = (data[p2] > data[p3]) ? data[p2] : data[p3];
+    data[p2] = (data[p2] < data[p3]) ? data[p2] : data[p3];
     data[p3] = tmp;
-    tmp = (${type}) Math.max(data[p3], data[p4]);
-    data[p3] = (${type}) Math.min(data[p3], data[p4]);
+    tmp = (data[p3] > data[p4]) ? data[p3] : data[p4];
+    data[p3] = (data[p3] < data[p4]) ? data[p3] : data[p4];
     data[p4] = tmp;
     //
-    tmp = (${type}) Math.max(data[p1], data[p2]);
-    data[p1] = (${type}) Math.min(data[p1], data[p2]);
+    tmp = (data[p1] > data[p2]) ? data[p1] : data[p2];
+    data[p1] = (data[p1] < data[p2]) ? data[p1] : data[p2];
     data[p2] = tmp;
-    tmp = (${type}) Math.max(data[p2], data[p3]);
-    data[p2] = (${type}) Math.min(data[p2], data[p3]);
+    tmp = (data[p2] > data[p3]) ? data[p2] : data[p3];
+    data[p2] = (data[p2] < data[p3]) ? data[p2] : data[p3];
     data[p3] = tmp;
     //
-    tmp = (${type}) Math.max(data[p1], data[p2]);
-    data[p1] = (${type}) Math.min(data[p1], data[p2]);
+    tmp = (data[p1] > data[p2]) ? data[p1] : data[p2];
+    data[p1] = (data[p1] < data[p2]) ? data[p1] : data[p2];
     data[p2] = tmp;
   }
 }

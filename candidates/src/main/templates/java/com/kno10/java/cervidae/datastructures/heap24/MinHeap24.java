@@ -292,7 +292,7 @@ public class ${Type}MinHeap24${def-generics} implements ${parent-Type}Heap${use-
    * @param cur Current object
    */
   private void heapifyDown2(int twopos, ${rawtype} cur) {
-    final int stop = Math.min(size, TWO_HEAP_MAX_SIZE) >>> 1;
+    final int stop = (size < TWO_HEAP_MAX_SIZE ? size : TWO_HEAP_MAX_SIZE) >>> 1;
     while (twopos < stop) {
       int bestchild = (twopos << 1) + 1;
       ${rawtype} best = twoheap[bestchild];
@@ -371,7 +371,7 @@ public class ${Type}MinHeap24${def-generics} implements ${parent-Type}Heap${use-
    */
   protected String checkHeap() {
     {
-      final int end = Math.min(size, TWO_HEAP_MAX_SIZE);
+      final int end = (size < TWO_HEAP_MAX_SIZE ? size : TWO_HEAP_MAX_SIZE);
       for (int i = 1; i < end; i++) {
         final int parent = (i - 1) >>> 1;
         if (${compare,>,twoheap[parent],twoheap[i]}) {

@@ -27,7 +27,7 @@ public final class HeapBenchmarkUtil {
       @Override
       public int batchSize(int batchnum, int totalsize) {
         if (batchnum == 0) {
-          return Math.min(totalsize, 10);
+          return totalsize < 10 ? totalsize : 10;
         } else {
           return (batchnum % 2 == 1) ? -1 : 1;
         }
@@ -43,7 +43,7 @@ public final class HeapBenchmarkUtil {
       @Override
       public int batchSize(int batchnum, int totalsize) {
         if (batchnum == 0) {
-          return Math.min(totalsize, 50);
+          return totalsize < 50 ? totalsize : 50;
         } else {
           return (batchnum % 2 == 1) ? -1 : 1;
         }
@@ -59,7 +59,7 @@ public final class HeapBenchmarkUtil {
       @Override
       public int batchSize(int batchnum, int totalsize) {
         if (batchnum == 0) {
-          return Math.min(totalsize, 100);
+          return totalsize < 100 ? totalsize : 100;
         } else {
           return (batchnum % 2 == 1) ? -1 : 1;
         }
@@ -75,7 +75,7 @@ public final class HeapBenchmarkUtil {
       @Override
       public int batchSize(int batchnum, int totalsize) {
         if (batchnum == 0) {
-          return Math.min(totalsize, 200);
+          return totalsize < 200 ? totalsize : 200;
         } else {
           return (batchnum % 2 == 1) ? -1 : 1;
         }
@@ -84,14 +84,14 @@ public final class HeapBenchmarkUtil {
     KNN500 {
       @Override
       public int numBatches(int totalsize) {
-        if (totalsize < 200) { return 1; }
-        return ((totalsize - 200) << 1) + 1;
+        if (totalsize < 500) { return 1; }
+        return ((totalsize - 500) << 1) + 1;
       }
 
       @Override
       public int batchSize(int batchnum, int totalsize) {
         if (batchnum == 0) {
-          return Math.min(totalsize, 200);
+          return totalsize < 500 ? totalsize : 500;
         } else {
           return (batchnum % 2 == 1) ? -1 : 1;
         }
