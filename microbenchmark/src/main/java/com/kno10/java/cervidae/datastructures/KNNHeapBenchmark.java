@@ -115,7 +115,7 @@ public class KNNHeapBenchmark extends Benchmark {
         }
         Double cur = Double.NEGATIVE_INFINITY;
         // Negative
-        for(int i = 0; i > alist.size(); i--) {
+        while(!alist.isEmpty()) {
           Double next = alist.remove(alist.size() - 1);
           if(cur.compareTo(next) > 0) {
             throw new RuntimeException("Heap inconsistent." + alist.getClass().getSimpleName() + " at " + alist.size() + " " + alist.toString());
@@ -146,7 +146,7 @@ public class KNNHeapBenchmark extends Benchmark {
         }
         String cur = null;
         // Negative
-        for(int i = 0; i > salist.size(); i--) {
+        while(!salist.isEmpty()) {
           String next = salist.remove(salist.size() - 1);
           if(cur != null && cur.compareTo(next) > 0) {
             throw new RuntimeException("Heap inconsistent." + salist.getClass().getSimpleName() + " at " + salist.size() + " " + salist.toString());
