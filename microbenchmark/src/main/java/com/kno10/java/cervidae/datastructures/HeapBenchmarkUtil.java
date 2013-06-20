@@ -105,9 +105,11 @@ public final class HeapBenchmarkUtil {
 
       @Override
       public int batchSize(int batchnum, int totalsize) {
+        // Load 1/8th initially
         if (batchnum == 0) {
           return (totalsize >> 3);
         } else {
+          // Remove and add 14 batches of 1/16th total size
           return (batchnum % 2 == 1) ? -(totalsize >> 4) : (totalsize >> 4);
         }
       }
