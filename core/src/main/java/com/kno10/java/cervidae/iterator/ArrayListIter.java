@@ -3,7 +3,7 @@ package com.kno10.java.cervidae.iterator;
 import java.util.List;
 
 /**
- * ELKI style Iterator for array lists.
+ * ELKI style iterator for array lists.
  * 
  * Note: this implementation is only efficient for lists with efficient random
  * access and seeking (i.e. ArrayLists, but not Linked Lists!)
@@ -12,7 +12,7 @@ import java.util.List;
  * 
  * @param <O> contained object type.
  */
-public class ArrayListIter<O> implements ArrayIter {
+public class ArrayListIter<O> implements ArrayMIter {
   /**
    * The array list to iterate over.
    */
@@ -26,7 +26,7 @@ public class ArrayListIter<O> implements ArrayIter {
   /**
    * Constructor.
    * 
-   * @param data Data array.
+   * @param data Data array list. <em>must</em> allow efficient random access.
    */
   public ArrayListIter(List<O> data) {
     super();
@@ -70,5 +70,13 @@ public class ArrayListIter<O> implements ArrayIter {
    */
   public O get() {
     return data.get(pos);
+  }
+
+  /**
+   * Note: O(n) complexity. Avoid.
+   */
+  @Override
+  public void remove() {
+    data.remove(pos);
   }
 }
