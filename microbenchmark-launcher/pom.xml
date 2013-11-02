@@ -88,6 +88,10 @@
 								<commandLineArgument>-i micro</commandLineArgument>
 							</commandLineArguments>
 						</program>
+						<program>
+							<mainClass>com.kno10.java.cervidae.math.MeanBenchmark</mainClass>
+							<name>benchmark-mean</name>
+						</program>
 					</programs>
 					<platforms>
 						<platform>unix</platform>
