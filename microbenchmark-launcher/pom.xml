@@ -91,6 +91,16 @@
 						<program>
 							<mainClass>com.kno10.java.cervidae.math.MeanBenchmark</mainClass>
 							<name>benchmark-mean</name>
+							<commandLineArguments>
+								<commandLineArgument>-i arbitrary</commandLineArgument>
+							</commandLineArguments>
+						</program>
+						<program>
+							<mainClass>com.kno10.java.cervidae.math.VarianceBenchmark</mainClass>
+							<name>benchmark-variance</name>
+							<commandLineArguments>
+								<commandLineArgument>-i arbitrary</commandLineArgument>
+							</commandLineArguments>
 						</program>
 					</programs>
 					<platforms>

@@ -20,29 +20,78 @@ import com.google.caliper.runner.CaliperMain;
  * 
  * @author Erich Schubert
  */
-public class MeanBenchmark extends Benchmark {
+public class VarianceBenchmark extends Benchmark {
   @Param({ "100", "10000", "1000000" })
   int size; // set automatically by framework
 
   private double[] array; // set by us, in setUp()
 
   enum Variant {//
-    NAIVE_SUM { // The naive, but lowest precision method
+    NAIVE_SINGLE { // The naive, but lowest precision method
       @Override
-      double mean(double[] array) {
+      double variance(double[] array) {
+        double sum = 0., sqsum = 0.;
+        int c = 0;
+        for(int j = 0; j < array.length; j++) {
+          sum += array[j];
+          sqsum += array[j] * array[j];
+          c++;
+        }
+        sum /= c;
+        sqsum /= c - 1;
+        return sqsum - sum * sum * c / (c - 1.);
+      }
+    },
+    NAIVE_DOUBLE { // The naive double-pass method.
+      @Override
+      double variance(double[] array) {
         double sum = 0.;
         int c = 0;
         for(int j = 0; j < array.length; j++) {
           sum += array[j];
           c++;
         }
-        return sum / c;
+        final double mean = sum / c;
+
+        double sqsum = 0.;
+        c = 0;
+        for(int j = 0; j < array.length; j++) {
+          double val = array[j] - mean;
+          sqsum += val * val;
+          c++;
+        }
+        return sqsum / (c - 1);
       }
     },
-    KAHAN { // Kahan summation, more robust against certain patterns (repeated
-            // small increments lost due to rounding.)
+    KAHAN_SINGLE { // Single-pass method using Kahan summation.
       @Override
-      double mean(double[] array) {
+      double variance(double[] array) {
+        double sum = 0., err = 0.;
+        double sqsum = 0., sqerr = 0.;
+        int c = 0;
+        for(int j = 0; j < array.length; j++) {
+          {
+            final double v = array[j] + err;
+            final double tmp = sum + v; // may lose some precision
+            err = v - (tmp - sum); // Compute loss
+            sum = tmp;
+          }
+          {
+            final double v = array[j] * array[j] + sqerr;
+            final double tmp = sqsum + v; // may lose some precision
+            sqerr = v - (tmp - sqsum); // Compute loss
+            sqsum = tmp;
+          }
+          c++;
+        }
+        sum /= c;
+        sqsum /= c - 1;
+        return sqsum - sum * sum * c / (c - 1.);
+      }
+    },
+    KAHAN_DOUBLE { // Double-pass method using Kahan summation.
+      @Override
+      double variance(double[] array) {
         double sum = 0., err = 0.;
         int c = 0;
         for(int j = 0; j < array.length; j++) {
@@ -52,54 +101,85 @@ public class MeanBenchmark extends Benchmark {
           sum = tmp;
           c++;
         }
-        return sum / c;
+        sum /= c;
+        c = 0;
+        double sqsum = 0., sqerr = 0.;
+        for(int j = 0; j < array.length; j++) {
+          final double d = array[j] - sum;
+          final double v = d * d + sqerr;
+          final double tmp = sqsum + v; // may lose some precision
+          sqerr = v - (tmp - sqsum); // Compute loss
+          sqsum = tmp;
+          c++;
+        }
+        sqsum /= c - 1;
+        return sqsum;
       }
     },
     WELFORD_I { // Incremental, as discussed by knuth-welford
       @Override
-      double mean(double[] array) {
+      double variance(double[] array) {
         double mean = 0.;
+        double sqsum = 0.;
         int c = 0;
         for(int j = 0; j < array.length; j++) {
-          mean += (array[j] - mean) / ++c;
+          final double delta = array[j] - mean;
+          // Update mean.
+          mean += delta / ++c;
+          // Update sum of squares
+          sqsum += delta * (array[j] - mean); // c.f. new mean!
         }
-        return mean;
+        return sqsum / (c - 1);
       }
     },
     WELFORD_D { // Incremental, as discussed by knuth-welford; supports
                 // weighted observations.
       @Override
-      double mean(double[] array) {
+      double variance(double[] array) {
         double mean = 0.;
+        double sqsum = 0.;
         double c = 0.;
         for(int j = 0; j < array.length; j++) {
+          final double delta = array[j] - mean;
           c += 1.;
-          mean += (array[j] - mean) / c;
+          // Update mean
+          mean += delta / c;
+          // Update sum of squares
+          sqsum += delta * 1. * (array[j] - mean); // c.f. new mean!
         }
-        return mean;
+        return sqsum / (c - 1);
       }
     },
     WEL_KAH { // Combination of welford and kahan summation.
       @Override
-      double mean(double[] array) {
+      double variance(double[] array) {
         double mean = 0., err = 0.;
+        double sqsum = 0., sqerr = 0.;
         double c = 0.;
         for(int j = 0; j < array.length; j++) {
           c += 1.;
+          final double delta = array[j] - mean;
           {
-            final double delta = (array[j] - mean) / c + err;
-            final double tmp = mean + delta; // may lose some precision
-            err = delta - (tmp - mean); // Compute loss
+            final double inc = delta / c + err;
+            final double tmp = mean + inc; // may lose some precision
+            err = inc - (tmp - mean); // Compute loss
             mean = tmp;
           }
+          final double sqinc = delta * (array[j] - mean) + sqerr;
+          {
+            final double tmp = sqsum + sqinc; // may lose some precision
+            sqerr = sqinc - (tmp - sqsum); // Compute loss
+            sqsum = tmp;
+          }
         }
-        return mean;
+        return sqsum / (c - 1);
       }
     },
-    WEL_KAH2 { // Combination of welford and double kahan summation.
+    WEL_KAH2 { // Combination of welford and extra kahan summation on c.
       @Override
-      double mean(double[] array) {
+      double variance(double[] array) {
         double mean = 0., err = 0.;
+        double sqsum = 0., sqerr = 0.;
         double c = 0., cerr = 0.;
         for(int j = 0; j < array.length; j++) {
           {
@@ -108,18 +188,25 @@ public class MeanBenchmark extends Benchmark {
             cerr = inc - (tmp - c);
             c = tmp;
           }
+          final double delta = array[j] - mean;
           {
-            final double delta = (array[j] - mean) / c + err;
-            final double tmp = mean + delta; // may lose some precision
-            err = delta - (tmp - mean); // Compute loss
+            final double inc = delta / c + err;
+            final double tmp = mean + inc; // may lose some precision
+            err = inc - (tmp - mean); // Compute loss
             mean = tmp;
           }
+          final double sqinc = delta * (array[j] - mean) + sqerr;
+          {
+            final double tmp = sqsum + sqinc; // may lose some precision
+            sqerr = sqinc - (tmp - sqsum); // Compute loss
+            sqsum = tmp;
+          }
         }
-        return mean;
+        return sqsum / (c - 1);
       }
     },
     ;
-    abstract double mean(double[] array);
+    abstract double variance(double[] array);
   };
 
   enum Pattern {
@@ -139,7 +226,17 @@ public class MeanBenchmark extends Benchmark {
       }
 
       @Override
+      double getVar(int size) {
+        return 0.;
+      }
+
+      @Override
       double getErrorScale(int size) {
+        return 1e-15 * size;
+      }
+
+      @Override
+      double getVarScale(int size) {
         return 1e-15 * size;
       }
     },
@@ -148,7 +245,7 @@ public class MeanBenchmark extends Benchmark {
       double[] generate(int size) {
         double[] array = new double[size];
         for(int i = 0; i < size; i++) {
-          array[i] = (1e15 * (i + 1)) / (size + 1);
+          array[i] = 1e15 * (i + 1) / (size + 1);
         }
         return array;
       }
@@ -159,8 +256,19 @@ public class MeanBenchmark extends Benchmark {
       }
 
       @Override
+      double getVar(int size) {
+        double stepwidth = 1e15 / (size + 1);
+        return (size + 1.) / size * (size * size - 1.) / 12 * stepwidth * stepwidth;
+      }
+
+      @Override
       double getErrorScale(int size) {
         return 1. * size;
+      }
+
+      @Override
+      double getVarScale(int size) {
+        return 1e14;
       }
     },
     DESCENDING {
@@ -168,7 +276,7 @@ public class MeanBenchmark extends Benchmark {
       double[] generate(int size) {
         double[] array = new double[size];
         for(int i = 0; i < size; i++) {
-          array[i] = (1e15 * (size - i)) / (size + 1);
+          array[i] = 1e15 * (size - i) / (size + 1);
         }
         return array;
       }
@@ -179,8 +287,19 @@ public class MeanBenchmark extends Benchmark {
       }
 
       @Override
+      double getVar(int size) {
+        double stepwidth = 1e15 / (size + 1);
+        return (size + 1.) / size * (size * size - 1.) / 12 * stepwidth * stepwidth;
+      }
+
+      @Override
       double getErrorScale(int size) {
         return 1. * size;
+      }
+
+      @Override
+      double getVarScale(int size) {
+        return 1e14;
       }
     },
     DOWNUP {
@@ -201,8 +320,19 @@ public class MeanBenchmark extends Benchmark {
       }
 
       @Override
+      double getVar(int size) {
+        double stepwidth = 1e15 / (size + 1);
+        return (size + 1.) / size * (size * size - 1.) / 12 * stepwidth * stepwidth;
+      }
+
+      @Override
       double getErrorScale(int size) {
         return 1. * size;
+      }
+
+      @Override
+      double getVarScale(int size) {
+        return 1e14;
       }
     },
     UPDOWN {
@@ -223,8 +353,19 @@ public class MeanBenchmark extends Benchmark {
       }
 
       @Override
+      double getVar(int size) {
+        double stepwidth = 1e15 / (size + 1);
+        return (size + 1.) / size * (size * size - 1.) / 12 * stepwidth * stepwidth;
+      }
+
+      @Override
       double getErrorScale(int size) {
         return 1. * size;
+      }
+
+      @Override
+      double getVarScale(int size) {
+        return 1e14;
       }
     },
     GAUSSIAN {
@@ -246,9 +387,19 @@ public class MeanBenchmark extends Benchmark {
       }
 
       @Override
+      double getVar(int size) {
+        return 1e20;
+      }
+
+      @Override
       double getErrorScale(int size) {
         // Expected variance decreases with size.
         return 1e10 * Math.sqrt(size);
+      }
+
+      @Override
+      double getVarScale(int size) {
+        return 1e10;
       }
     },
     GAUSSIAN_BIASED_E15 {
@@ -270,9 +421,19 @@ public class MeanBenchmark extends Benchmark {
       }
 
       @Override
+      double getVar(int size) {
+        return 1e10;
+      }
+
+      @Override
       double getErrorScale(int size) {
         // Expected variance decreases with size.
         return 1e5 * Math.sqrt(size);
+      }
+
+      @Override
+      double getVarScale(int size) {
+        return 1e5;
       }
     },
     ;
@@ -284,6 +445,12 @@ public class MeanBenchmark extends Benchmark {
 
     /** Expected scale of errors, for normalization */
     abstract double getErrorScale(int size);
+
+    /** Expected variance; approximate! */
+    abstract double getVar(int size);
+
+    /** Expected scale of errors on variance, for normalization */
+    abstract double getVarScale(int size);
   }
 
   @Param
@@ -300,7 +467,7 @@ public class MeanBenchmark extends Benchmark {
   public double timeDoubleMean(int reps) {
     double ret = 0;
     for(int i = 0; i < reps; i++) {
-      double mean = variant.mean(array);
+      double mean = variant.variance(array);
       ret += mean;
     }
     return ret;
@@ -309,10 +476,10 @@ public class MeanBenchmark extends Benchmark {
   @ArbitraryMeasurement(description = "error", units = "normalized")
   @Macrobenchmark
   public double meanError() {
-    return Math.abs(variant.mean(array) - pattern.getMean()) * size / pattern.getErrorScale(size);
+    return 100 * Math.sqrt(Math.abs(variant.variance(array) - pattern.getVar(size))) / pattern.getVarScale(size);
   }
 
   public static void main(String[] args) {
-    CaliperMain.main(MeanBenchmark.class, args);
+    CaliperMain.main(VarianceBenchmark.class, args);
   }
 }
