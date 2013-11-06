@@ -102,6 +102,13 @@
 								<commandLineArgument>-i arbitrary</commandLineArgument>
 							</commandLineArguments>
 						</program>
+						<program>
+							<mainClass>com.kno10.java.cervidae.math.PowiBenchmark</mainClass>
+							<name>benchmark-powi</name>
+							<commandLineArguments>
+								<commandLineArgument>-i micro</commandLineArgument>
+							</commandLineArguments>
+						</program>
 					</programs>
 					<platforms>
 						<platform>unix</platform>
