@@ -86,6 +86,8 @@ public class QuickSortBo5 extends AbstractArraySortAlgorithm {
         break;
       }
       adapter.swap(data, i, j);
+      i++;
+      j--;
     }
 
     // Move pivot back into the appropriate place
