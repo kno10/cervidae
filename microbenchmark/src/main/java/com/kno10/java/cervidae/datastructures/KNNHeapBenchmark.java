@@ -172,6 +172,7 @@ public class KNNHeapBenchmark extends Benchmark {
           else if(max.compareTo(obj) > 0) {
             if(jheap.size() >= k) {
               jheap.poll();
+              max = jheap.peek();
             }
             jheap.add(obj);
           }
@@ -199,6 +200,7 @@ public class KNNHeapBenchmark extends Benchmark {
           else if(max == null || max.compareTo(obj) > 0) {
             if(jsheap.size() >= k) {
               jsheap.poll();
+              max = jsheap.peek();
             }
             jsheap.add(obj);
           }
@@ -230,7 +232,7 @@ public class KNNHeapBenchmark extends Benchmark {
         }
         else if(max.compareTo(obj) > 0) {
           if(heap.size() >= k) {
-            heap.replaceTopElement(obj);
+            max = heap.replaceTopElement(obj);
           }
           else {
             heap.add(obj);
@@ -258,7 +260,7 @@ public class KNNHeapBenchmark extends Benchmark {
         }
         else if(max == null || max.compareTo(obj) > 0) {
           if(sheap.size() >= k) {
-            sheap.replaceTopElement(obj);
+            max = sheap.replaceTopElement(obj);
           }
           else {
             sheap.add(obj);
