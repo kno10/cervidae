@@ -44,9 +44,9 @@ public class SortThresholdBenchmark {
 	int threshold;
 
 	@Param({ //
-	BASE + "DualPivotQuickSortBo5", //
-			BASE + "QuickSortBo5", //
-			BASE + "QuickSortBo3", //
+	"DualPivotQuickSortBo5", //
+			"QuickSortBo5", //
+			"QuickSortBo3", //
 	})
 	String algname;
 
@@ -63,8 +63,12 @@ public class SortThresholdBenchmark {
 	@Setup
 	public void setUp() {
 		try {
-			Constructor<?> con = Class.forName(algname).getConstructor(
-					int.class);
+			Constructor<?> con;
+			try {
+				con = Class.forName(algname).getConstructor(int.class);
+			} catch (ClassNotFoundException e) {
+				con = Class.forName(BASE + algname).getConstructor(int.class);
+			}
 			alg = (ArraySortAlgorithm) con.newInstance(threshold);
 		} catch (Exception e) {
 			System.err.println("Exception loading algorithm: " + algname + ": "

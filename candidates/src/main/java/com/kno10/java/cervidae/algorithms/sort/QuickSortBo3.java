@@ -61,36 +61,10 @@ public class QuickSortBo3 extends AbstractArraySortAlgorithm {
     final int mid = start + (len >> 1);
 
     // Ensure that the last element is the median:
-    if(adapter.greaterThan(data, start, mid)) {
-      if(adapter.greaterThan(data, start, last)) {
-        if(adapter.greaterThan(data, mid, last)) {
-          // start > mid > last:
-          adapter.swap(data, last, mid);
-        }
-        // else: start > last > mid
-      }
-      else {
-        // last > start > mid
-        adapter.swap(data, last, start);
-      }
-    }
-    else {
-      if(adapter.greaterThan(data, start, last)) {
-        // mid > start > last
-        adapter.swap(data, last, start);
-      }
-      else {
-        if(adapter.greaterThan(data, last, mid)) {
-          // last > mid > start
-          adapter.swap(data, last, mid);
-        }
-        // else: mid > last > start
-      }
-    }
+    moveMedianLast(adapter, data, start, mid, last);
 
     // We placed our pivot at the last position.
-    int i = start;
-    int j = last - 1;
+    int i = start, j = last - 1;
 
     // This is the classic QuickSort loop:
     while(true) {
@@ -117,6 +91,31 @@ public class QuickSortBo3 extends AbstractArraySortAlgorithm {
     }
     if(i < last) {
       sort(adapter, data, i + 1, end);
+    }
+  }
+
+  private <T> void moveMedianLast(ArraySortAdapter<? super T> adapter, T data, final int start, final int mid, final int last) {
+    if(adapter.greaterThan(data, start, mid)) {
+      if(adapter.greaterThan(data, mid, last)) {
+        // start > mid > last:
+        adapter.swap(data, last, mid);
+      }
+      else if(adapter.greaterThan(data, last, start)) {
+        // last > start > mid
+        adapter.swap(data, last, start);
+      }
+      // else: start > last > mid
+    }
+    else {
+      if(adapter.greaterThan(data, start, last)) {
+        // mid > start > last
+        adapter.swap(data, last, start);
+      }
+      else if(adapter.greaterThan(data, last, mid)) {
+        // last > mid > start
+        adapter.swap(data, last, mid);
+      }
+      // else: mid > last > start
     }
   }
 }

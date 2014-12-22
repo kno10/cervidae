@@ -17,7 +17,10 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import com.kno10.java.cervidae.adapter.arraylike.DoubleArrayAdapter;
+import com.kno10.java.cervidae.adapter.arraylike.IntegerArrayAdapter;
 import com.kno10.java.cervidae.algorithms.sort.DoubleArrayQuickSort;
+import com.kno10.java.cervidae.algorithms.sort.InsertionSort;
 import com.kno10.java.cervidae.algorithms.sort.IntegerArrayQuickSort;
 import com.kno10.java.cervidae.comparator.PrimitiveComparators;
 
@@ -129,6 +132,19 @@ public class Sort5Benchmark {
 			@Override
 			void sort(int[] data) {
 				Arrays.sort(data);
+			}
+		},
+		CERVIDAE5 {
+			@Override
+			void sort(double[] data) {
+				InsertionSort.sort5(DoubleArrayAdapter.STATIC, data, 0, 1, 2,
+						3, 4);
+			}
+
+			@Override
+			void sort(int[] data) {
+				InsertionSort.sort5(IntegerArrayAdapter.STATIC, data, 0, 1, 2,
+						3, 4);
 			}
 		},
 		CERVIDAE { // This one is actually not just for 5 elements...

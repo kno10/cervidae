@@ -30,10 +30,10 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
  */
 @Fork(1)
 @Warmup(iterations = 5, time = 100, timeUnit = TimeUnit.MILLISECONDS)
-@Measurement(iterations = 5, time = 100, timeUnit = TimeUnit.MILLISECONDS)
+@Measurement(iterations = 10, time = 100, timeUnit = TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
 public class VarianceBenchmark {
-	@Param({ "100", "10000", "1000000" })
+	@Param({ "1000000" })
 	int size; // set automatically by framework
 
 	private double[] array; // set by us, in setUp()

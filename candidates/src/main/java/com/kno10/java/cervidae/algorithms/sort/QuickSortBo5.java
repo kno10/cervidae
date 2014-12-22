@@ -16,7 +16,7 @@ public class QuickSortBo5 extends AbstractArraySortAlgorithm {
    * 
    * Values of 20-30 were best in benchmarking.
    */
-  private static final int INSERTION_THRESHOLD = 22;
+  private static final int INSERTION_THRESHOLD = 26;
 
   /**
    * Static instance of algorithm.
@@ -71,8 +71,7 @@ public class QuickSortBo5 extends AbstractArraySortAlgorithm {
     adapter.swap(data, m3, last);
 
     // Pivot is at last position. Setup interval:
-    int i = start;
-    int j = last - 1;
+    int i = start, j = last - 1;
 
     // This is the classic QuickSort loop:
     while (true) {
