@@ -1,7 +1,7 @@
 package com.kno10.java.cervidae.datastructures;
 
 public final class HeapBenchmarkUtil {
-  enum Workload {
+  public enum Workload {
     LOAD_AND_EMPTY {
       @Override
       public int numBatches(int totalsize) {
