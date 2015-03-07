@@ -1,5 +1,6 @@
 package com.kno10.java.cervidae.math;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -96,6 +97,20 @@ public class SumBenchmark {
       sum += v;
     }
     return sum;
+  }
+
+  // This one is expected to be significantly slower, because it accounts for
+  // some rounding errors, i.e. has higher precision
+  @Benchmark
+  public double streamsSum() {
+    return Arrays.stream(array).sum();
+  }
+
+  @Benchmark
+  public double lambdaSum() {
+    double[] sum = new double[1];
+    Arrays.stream(array).forEach(x -> sum[0] += x);
+    return sum[0];
   }
 
   @Benchmark
