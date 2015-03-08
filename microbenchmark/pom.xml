@@ -22,7 +22,7 @@
 	</licenses>
 
 	<properties>
-		<jmh.version>1.4</jmh.version>
+		<jmh.version>1.6.1</jmh.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<uberjar.name>benchmarks</uberjar.name>
 	</properties>
